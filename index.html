@@ -9623,14 +9623,17 @@ var _ManuScriptHub$elm_diagram$OnePageScroll$update = F2(
 									t,
 									A2(_ManuScriptHub$elm_diagram$Util$multiplyVec, dirVec, model.windowSize));
 							},
-							_szabba$elm_animations$Animation$interval(
-								A2(
-									F2(
-										function (x, y) {
-											return x * y;
-										}),
-									_elm_lang$core$Time$second,
-									0.6)));
+							A2(
+								_szabba$elm_animations$Animation$map,
+								_elm_community$easing_functions$Ease$outQuint,
+								_szabba$elm_animations$Animation$interval(
+									A2(
+										F2(
+											function (x, y) {
+												return x * y;
+											}),
+										_elm_lang$core$Time$second,
+										0.6))));
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							A2(
