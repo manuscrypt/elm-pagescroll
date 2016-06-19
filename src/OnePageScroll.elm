@@ -187,16 +187,6 @@ move model =
         }
 
 
-view' : Model a -> Html Msg
-view' model =
-    Html.div
-        [ scrollStyle model
-        , HE.onClick (Scroll Keyboard.North)
-        ]
-        [ Html.div [ HA.style [ (,) "visibility" "visible" ] ] [ Html.text "This is a test" ]
-        ]
-
-
 translate : Vec2 -> String
 translate pos =
     "translate (" ++ (toString <| getX pos) ++ "," ++ (toString <| getY pos) ++ ")"

@@ -9,15 +9,23 @@ import Animation exposing (Animation)
 import AnimationFrame
 import Time exposing (Time)
 import Window
-import String
 import Task.Extra as Task
 import Keyboard.Extra as Keyboard exposing (Direction)
 import Ease exposing (outQuint, inOutBack)
 import KeyboardHelpers exposing (directionToTuple)
+import Util exposing (..)
 
 
 type alias Cell a =
     VirtualDom.Node a
+
+
+type alias Dir =
+    ( Int, Int )
+
+
+type alias Page =
+    ( Int, Int )
 
 
 type Cols a
@@ -28,19 +36,13 @@ type Rows a
     = Rows (List (Cols a)) (Cols a) (List (Cols a))
 
 
-
--- animation : Animation (Window.Size -> Svg Msg)
--- zeroState : Window.Size -> Svg Msg
--- zeroState =
---     (\s -> Svg.circle [ SA.cx "0", SA.cy "0", SA.r <| toString s.width ] [])
-
-
 type alias Model a =
-    { animation : Animation Float
+    { animation : Animation (Window.Size -> Dir -> ( Float, Float ))
     , rows : Rows a
     , windowSize : Window.Size
     , keyboardModel : Keyboard.Model
-    , curDir : ( Int, Int )
+    , curDir : Dir
+    , curPage : Page
     }
 
 
@@ -50,7 +52,7 @@ type Msg
     | Animate Time
     | OnSizeChanged Window.Size
     | KeyboardMsg Keyboard.Msg
-    | Scroll ( Int, Int )
+    | Scroll Dir
 
 
 fromText : String -> Cell a
@@ -86,16 +88,11 @@ main =
         }
 
 
-sizeToMsg : Window.Size -> Msg
-sizeToMsg size =
-    OnSizeChanged size
-
-
-subscriptions : { b | animation : Animation a } -> Sub Msg
+subscriptions : Model a -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Sub.map KeyboardMsg Keyboard.subscriptions
-        , Window.resizes sizeToMsg
+        , Window.resizes (\size -> OnSizeChanged size)
         , if Animation.isDone model.animation then
             Sub.none
           else
@@ -111,23 +108,25 @@ init size =
     in
         { windowSize = size
         , rows = content
-        , animation = halfPulse
+        , animation = scrollAnimation
         , keyboardModel = keyboardModel
         , curDir = ( 0, 0 )
+        , curPage = ( 0, 0 )
         }
-            ! [ Cmd.map KeyboardMsg keyboardCmd, initWindowSize ]
+            ! [ Cmd.map KeyboardMsg keyboardCmd, Window.size |> Task.performFailproof (\s -> OnSizeChanged s) ]
 
 
-halfPulse : Animation Float
-halfPulse =
+scrollAnimation : Animation (Window.Size -> Dir -> ( Float, Float ))
+scrollAnimation =
     (1 * Time.second)
         |> Animation.interval
         |> Animation.map Ease.inOutBack
-
-
-initWindowSize : Cmd Msg
-initWindowSize =
-    Window.size |> Task.performFailproof sizeToMsg
+        |> Animation.map
+            (\t size dir ->
+                ( t * (toFloat <| fst dir) * (toFloat <| size.width)
+                , t * (toFloat <| snd dir) * (toFloat <| size.height)
+                )
+            )
 
 
 update : Msg -> Model a -> ( Model a, Cmd Msg )
@@ -151,12 +150,15 @@ update msg model =
                 model' ! [ Cmd.map KeyboardMsg keyboardCmd, cmd ]
 
         Scroll dir ->
-            if (fst dir == 0) then
+            if (dir == ( 0, 0 )) then
                 model ! []
-            else if (dir == model.curDir) then
-                model ! []
+            else if not (Animation.isDone model.animation) then
+                if (dir == oppositeOf model.curDir) then
+                    { model | animation = Animation.reverse model.animation, curDir = dir } ! []
+                else
+                    model ! []
             else
-                { model | animation = Animation.reverse model.animation, curDir = dir } ! []
+                { model | animation = scrollAnimation, curDir = dir } ! []
 
         MouseOver ->
             model ! []
@@ -174,7 +176,127 @@ update msg model =
                         { model | animation = animated } ! []
 
                     True ->
-                        { model | animation = animated, rows = shiftCols model, curDir = ( 0, 0 ) } ! []
+                        { model
+                            | animation = animated
+                            , rows = shiftCols model
+                            , curPage = add model.curPage model.curDir
+                            , curDir = ( 0, 0 )
+                        }
+                            ! []
+
+
+windowSize : Model a -> Window.Size
+windowSize m =
+    { width = round (0.9 * (toFloat m.windowSize.width)), height = round (0.9 * (toFloat m.windowSize.height)) }
+
+
+cellSize : Model a -> Window.Size
+cellSize m =
+    let
+        { width, height } =
+            windowSize m
+
+        max =
+            min width height
+    in
+        { width = max // 4, height = max // 4 }
+
+
+view : Model a -> Svg Msg
+view m =
+    let
+        { width, height } =
+            windowSize m
+
+        (Rows top cur bot) =
+            m.rows
+
+        allRows =
+            top ++ [ cur ] ++ bot
+    in
+        Svg.svg
+            [ SA.width <| toString width
+            , SA.height <| toString height
+            , SA.viewBox <| viewBox <| windowSize m
+            , SA.style "border: 1px solid #cccccc;"
+            ]
+            [ Svg.g [ offset <| pageOffset m ] (List.indexedMap (viewCol m (List.length allRows)) allRows)
+            , Svg.circle [ SA.cx "0", SA.cy "0", SA.r "3", SA.fill "green" ] []
+            ]
+
+
+viewCol : Model a -> Int -> Int -> Cols a -> Svg Msg
+viewCol model count idx (Cols left center right) =
+    let
+        all =
+            left ++ [ center ] ++ right
+
+        size =
+            cellSize model
+
+        rowOffset =
+            ( 0, toFloat <| ((-count + 1) // 2 + idx) * size.height )
+    in
+        Svg.g [ offset rowOffset ] <| List.indexedMap (viewCell model (List.length all)) all
+
+
+viewCell : Model a -> Int -> Int -> Cell a -> Svg Msg
+viewCell model count idx cell =
+    let
+        size =
+            cellSize model
+
+        colOff =
+            ( toFloat <| (-count // 2 + idx) * size.width, 0 )
+
+        animOff =
+            Animation.sample model.animation (cellSize model) model.curDir
+    in
+        App.map (\_ -> NoOp)
+            <| Svg.g [ offset <| add animOff colOff ]
+                [ Svg.rect (defaultRect size "stroke:green;line-style:dashed;fill:none") []
+                , Svg.foreignObject (defaultRect size "fill:red") [ Html.body [] [ cell ] ]
+                ]
+
+
+offset : ( number, number ) -> Svg.Attribute b
+offset ( x, y ) =
+    SA.transform <| "translate (" ++ (toString x) ++ "," ++ (toString y) ++ ")"
+
+
+defaultRect : Window.Size -> String -> List (Svg.Attribute a)
+defaultRect size style =
+    [ SA.x <| toString (-size.width // 2)
+    , SA.y <| toString (-size.height // 2)
+    , SA.width <| toString size.width
+    , SA.height <| toString size.height
+    , SA.style style
+    ]
+
+
+pageOffset : Model a -> ( Float, Float )
+pageOffset model =
+    let
+        size =
+            cellSize model
+    in
+        ( toFloat <| fst model.curPage * size.width
+        , toFloat <| snd model.curPage * size.height
+        )
+
+
+add : ( number, number ) -> ( number, number ) -> ( number, number )
+add ( a, b ) ( x, y ) =
+    ( a + x, b + y )
+
+
+oppositeOf : ( Int, Int ) -> ( Int, Int )
+oppositeOf ( x, y ) =
+    ( -x, -y )
+
+
+
+--SHIFT
 
 
 shiftCols : Model a -> Rows a
@@ -184,9 +306,9 @@ shiftCols model =
             model.rows
     in
         if (fst model.curDir == -1) then
-            Debug.log "shift left" <| Rows top (shiftLeft mid) bot
+            Rows top (shiftLeft mid) bot
         else
-            Debug.log "shift right" <| Rows top (shiftRight mid) bot
+            Rows top (shiftRight mid) bot
 
 
 shiftLeft : Cols a -> Cols a
@@ -204,7 +326,7 @@ shiftLeft (Cols left center right) =
             newRight =
                 List.drop 1 right
         in
-            Debug.log "newLeft" <| Cols newLeft newCenter newRight
+            Cols newLeft newCenter newRight
 
 
 shiftRight : Cols a -> Cols a
@@ -222,134 +344,25 @@ shiftRight (Cols left center right) =
             newRight =
                 [ center ] ++ right
         in
-            Debug.log "newRight" <| Cols newLeft newCenter newRight
-
-
-toSvg : Float -> Window.Size -> Svg Msg
-toSvg t { width, height } =
-    Svg.circle
-        [ SA.r <| toString <| 0.3 * t * (toFloat (min width height))
-        , SA.cx "0"
-        , SA.cy "0"
-        , SA.stroke "#000000"
-        , SA.fillOpacity "0"
-        , SA.strokeWidth "5"
-        ]
-        []
-
-
-windowSize : Model a -> Window.Size
-windowSize m =
-    { width = round (0.9 * (toFloat m.windowSize.width)), height = round (0.9 * (toFloat m.windowSize.height)) }
-
-
-cellSize : Model a -> Window.Size
-cellSize m =
-    let
-        { width, height } =
-            m.windowSize
-
-        max =
-            min width height
-    in
-        { width = max // 4, height = max // 4 }
-
-
-centerCircle : Svg a
-centerCircle =
-    Svg.circle [ SA.cx "0", SA.cy "0", SA.r "3", SA.fill "green" ] []
-
-
-view : Model a -> Svg Msg
-view m =
-    let
-        { width, height } =
-            windowSize m
-    in
-        Svg.svg
-            [ SA.width <| toString width
-            , SA.height <| toString height
-            , SA.viewBox <| viewBox <| windowSize m
-            , SA.style "border: 1px solid #cccccc;"
-            ]
-            [ viewRows m
-            , centerCircle
-            ]
-
-
-viewRows : Model a -> Svg Msg
-viewRows model =
-    let
-        (Rows top cur bot) =
-            model.rows
-
-        rows =
-            top ++ [ cur ] ++ bot
-
-        mapRow =
-            viewCols model { count = List.length rows }
-    in
-        Svg.g [] (List.indexedMap mapRow rows)
-
-
-viewCols : Model a -> { count : Int } -> Int -> Cols a -> Svg Msg
-viewCols model colCount idx (Cols left mid right) =
-    let
-        cols =
-            left ++ [ mid ] ++ right
-
-        mapCol =
-            viewCell model { count = List.length cols }
-    in
-        Svg.g [] (List.indexedMap mapCol cols)
-
-
-viewCell : Model a -> { count : Int } -> Int -> Cell a -> Svg Msg
-viewCell model { count } idx cell =
-    let
-        size =
-            cellSize model
-
-        offAnim =
-            Animation.sample model.animation |> (*) (toFloat size.width) |> round
-
-        offPage =
-            (-count // 2 + idx) * size.width
-    in
-        App.map (\_ -> NoOp)
-            <| Svg.g [ offset ( offPage + offAnim, 0 ) ]
-                [ Svg.rect (defaultRect size.width "stroke:red;line-style:dashed;fill:none") []
-                , embedHtml size.width cell
-                ]
-
-
-embedHtml : Int -> Cell a -> Svg a
-embedHtml size model =
-    Svg.foreignObject (defaultRect 50 "fill:red") [ Html.body [] [ model ] ]
-
-
-offset : ( number, number ) -> Svg.Attribute b
-offset ( x, y ) =
-    SA.transform <| "translate (" ++ (toString x) ++ "," ++ (toString y) ++ ")"
-
-
-defaultRect : Int -> String -> List (Svg.Attribute a)
-defaultRect size style =
-    [ SA.x <| toString (-size // 2)
-    , SA.y <| toString (-size // 2)
-    , SA.width <| toString size
-    , SA.height <| toString size
-    , SA.fill "none"
-    , SA.style style
-    ]
-
-
-viewBox : { a | height : Int, width : Int } -> String
-viewBox { width, height } =
-    String.join " " <| List.map toString [ -width // 2, -height // 2, width, height ]
+            Cols newLeft newCenter newRight
 
 
 
+-- animation : Animation (Window.Size -> Svg Msg)
+-- zeroState : Window.Size -> Svg Msg
+-- zeroState =
+--     (\s -> Svg.circle [ SA.cx "0", SA.cy "0", SA.r <| toString s.width ] [])
+-- toSvg : Float -> Window.Size -> Svg Msg
+-- toSvg t { width, height } =
+--     Svg.circle
+--         [ SA.r <| toString <| 0.3 * t * (toFloat (min width height))
+--         , SA.cx "0"
+--         , SA.cy "0"
+--         , SA.stroke "#000000"
+--         , SA.fillOpacity "0"
+--         , SA.strokeWidth "5"
+--         ]
+--         []
 -- viewRows : Window.Size->{ rowCount:Int }->Int ->Rows a -> Svg a
 -- viewRows size rowCount idx (Rows top mid bot) =
 --     let rows = top ++ [mid] ++ bot
@@ -357,6 +370,3 @@ viewBox { width, height } =
 -- viewCell : String  -> Int -> Int -> Html a -> Svg Msg
 -- viewCell style size idx cell =
 --     Svg.g [ offsetBy (30 * idx), SA.style style ] [ App.map (\s -> NoOp) <| embedHtml size cell ]
--- offsetBy : a -> Svg.Attribute b
--- offsetBy offset =
---     SA.transform <| "translate (" ++ (toString offset) ++ ",0)"
