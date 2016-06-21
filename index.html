@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html><head><meta charset="UTF-8"><title>OnePageScroll</title><style>html,head,body { padding:0; margin:0; }
+<html><head><meta charset="UTF-8"><title>Pane</title><style>html,head,body { padding:0; margin:0; }
 body { font-family: calibri, helvetica, arial, sans-serif; }</style><script type="text/javascript">
 (function() {
 'use strict';
@@ -6825,6 +6825,8 @@ var _ohanhi$keyboard_extra$Keyboard_Extra$pressedDown = function (model) {
 var _ManuScriptHub$elm_pagescroll$KeyboardHelpers$directionToTuple = function (dir) {
 	var _p0 = dir;
 	switch (_p0.ctor) {
+		case 'NoDirection':
+			return {ctor: '_Tuple2', _0: 0, _1: 0};
 		case 'North':
 			return {ctor: '_Tuple2', _0: 0, _1: 1};
 		case 'NorthEast':
@@ -6839,10 +6841,8 @@ var _ManuScriptHub$elm_pagescroll$KeyboardHelpers$directionToTuple = function (d
 			return {ctor: '_Tuple2', _0: -1, _1: -1};
 		case 'West':
 			return {ctor: '_Tuple2', _0: -1, _1: 0};
-		case 'NorthWest':
-			return {ctor: '_Tuple2', _0: -1, _1: 1};
 		default:
-			return {ctor: '_Tuple2', _0: 0, _1: 0};
+			return {ctor: '_Tuple2', _0: -1, _1: 1};
 	}
 };
 //import Native.Json //
@@ -7994,494 +7994,6 @@ var _elm_lang$html$Html$details = _elm_lang$html$Html$node('details');
 var _elm_lang$html$Html$summary = _elm_lang$html$Html$node('summary');
 var _elm_lang$html$Html$menuitem = _elm_lang$html$Html$node('menuitem');
 var _elm_lang$html$Html$menu = _elm_lang$html$Html$node('menu');
-var _elm_lang$html$Html_App$programWithFlags = _elm_lang$virtual_dom$VirtualDom$programWithFlags;
-var _elm_lang$html$Html_App$program = function (app) {
-	return _elm_lang$html$Html_App$programWithFlags(
-		_elm_lang$core$Native_Utils.update(
-			app,
-			{
-				init: function (_p0) {
-					return app.init;
-				}
-			}));
-};
-var _elm_lang$html$Html_App$beginnerProgram = function (_p1) {
-	var _p2 = _p1;
-	return _elm_lang$html$Html_App$programWithFlags(
-		{
-			init: function (_p3) {
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_p2.model,
-					_elm_lang$core$Native_List.fromArray(
-						[]));
-			},
-			update: F2(
-				function (msg, model) {
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						A2(_p2.update, msg, model),
-						_elm_lang$core$Native_List.fromArray(
-							[]));
-				}),
-			view: _p2.view,
-			subscriptions: function (_p4) {
-				return _elm_lang$core$Platform_Sub$none;
-			}
-		});
-};
-var _elm_lang$html$Html_App$map = _elm_lang$virtual_dom$VirtualDom$map;
-var _elm_lang$html$Html_Attributes$attribute = _elm_lang$virtual_dom$VirtualDom$attribute;
-var _elm_lang$html$Html_Attributes$contextmenu = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$attribute, 'contextmenu', value);
-};
-var _elm_lang$html$Html_Attributes$property = _elm_lang$virtual_dom$VirtualDom$property;
-var _elm_lang$html$Html_Attributes$stringProperty = F2(
-	function (name, string) {
-		return A2(
-			_elm_lang$html$Html_Attributes$property,
-			name,
-			_elm_lang$core$Json_Encode$string(string));
-	});
-var _elm_lang$html$Html_Attributes$class = function (name) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'className', name);
-};
-var _elm_lang$html$Html_Attributes$id = function (name) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'id', name);
-};
-var _elm_lang$html$Html_Attributes$title = function (name) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'title', name);
-};
-var _elm_lang$html$Html_Attributes$accesskey = function ($char) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'accessKey',
-		_elm_lang$core$String$fromChar($char));
-};
-var _elm_lang$html$Html_Attributes$dir = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'dir', value);
-};
-var _elm_lang$html$Html_Attributes$draggable = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'draggable', value);
-};
-var _elm_lang$html$Html_Attributes$dropzone = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'dropzone', value);
-};
-var _elm_lang$html$Html_Attributes$itemprop = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'itemprop', value);
-};
-var _elm_lang$html$Html_Attributes$lang = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'lang', value);
-};
-var _elm_lang$html$Html_Attributes$tabindex = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'tabIndex',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$charset = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'charset', value);
-};
-var _elm_lang$html$Html_Attributes$content = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'content', value);
-};
-var _elm_lang$html$Html_Attributes$httpEquiv = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'httpEquiv', value);
-};
-var _elm_lang$html$Html_Attributes$language = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'language', value);
-};
-var _elm_lang$html$Html_Attributes$src = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'src', value);
-};
-var _elm_lang$html$Html_Attributes$height = function (value) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'height',
-		_elm_lang$core$Basics$toString(value));
-};
-var _elm_lang$html$Html_Attributes$width = function (value) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'width',
-		_elm_lang$core$Basics$toString(value));
-};
-var _elm_lang$html$Html_Attributes$alt = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'alt', value);
-};
-var _elm_lang$html$Html_Attributes$preload = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'preload', value);
-};
-var _elm_lang$html$Html_Attributes$poster = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'poster', value);
-};
-var _elm_lang$html$Html_Attributes$kind = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'kind', value);
-};
-var _elm_lang$html$Html_Attributes$srclang = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'srclang', value);
-};
-var _elm_lang$html$Html_Attributes$sandbox = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'sandbox', value);
-};
-var _elm_lang$html$Html_Attributes$srcdoc = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'srcdoc', value);
-};
-var _elm_lang$html$Html_Attributes$type$ = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'type', value);
-};
-var _elm_lang$html$Html_Attributes$value = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'value', value);
-};
-var _elm_lang$html$Html_Attributes$defaultValue = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'defaultValue', value);
-};
-var _elm_lang$html$Html_Attributes$placeholder = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'placeholder', value);
-};
-var _elm_lang$html$Html_Attributes$accept = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'accept', value);
-};
-var _elm_lang$html$Html_Attributes$acceptCharset = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'acceptCharset', value);
-};
-var _elm_lang$html$Html_Attributes$action = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'action', value);
-};
-var _elm_lang$html$Html_Attributes$autocomplete = function (bool) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'autocomplete',
-		bool ? 'on' : 'off');
-};
-var _elm_lang$html$Html_Attributes$autosave = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'autosave', value);
-};
-var _elm_lang$html$Html_Attributes$enctype = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'enctype', value);
-};
-var _elm_lang$html$Html_Attributes$formaction = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'formAction', value);
-};
-var _elm_lang$html$Html_Attributes$list = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'list', value);
-};
-var _elm_lang$html$Html_Attributes$minlength = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'minLength',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$maxlength = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'maxLength',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$method = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'method', value);
-};
-var _elm_lang$html$Html_Attributes$name = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'name', value);
-};
-var _elm_lang$html$Html_Attributes$pattern = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'pattern', value);
-};
-var _elm_lang$html$Html_Attributes$size = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'size',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$for = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'htmlFor', value);
-};
-var _elm_lang$html$Html_Attributes$form = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'form', value);
-};
-var _elm_lang$html$Html_Attributes$max = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'max', value);
-};
-var _elm_lang$html$Html_Attributes$min = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'min', value);
-};
-var _elm_lang$html$Html_Attributes$step = function (n) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'step', n);
-};
-var _elm_lang$html$Html_Attributes$cols = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'cols',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$rows = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'rows',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$wrap = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'wrap', value);
-};
-var _elm_lang$html$Html_Attributes$usemap = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'useMap', value);
-};
-var _elm_lang$html$Html_Attributes$shape = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'shape', value);
-};
-var _elm_lang$html$Html_Attributes$coords = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'coords', value);
-};
-var _elm_lang$html$Html_Attributes$challenge = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'challenge', value);
-};
-var _elm_lang$html$Html_Attributes$keytype = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'keytype', value);
-};
-var _elm_lang$html$Html_Attributes$align = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'align', value);
-};
-var _elm_lang$html$Html_Attributes$cite = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'cite', value);
-};
-var _elm_lang$html$Html_Attributes$href = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'href', value);
-};
-var _elm_lang$html$Html_Attributes$target = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'target', value);
-};
-var _elm_lang$html$Html_Attributes$downloadAs = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'download', value);
-};
-var _elm_lang$html$Html_Attributes$hreflang = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'hreflang', value);
-};
-var _elm_lang$html$Html_Attributes$media = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'media', value);
-};
-var _elm_lang$html$Html_Attributes$ping = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'ping', value);
-};
-var _elm_lang$html$Html_Attributes$rel = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'rel', value);
-};
-var _elm_lang$html$Html_Attributes$datetime = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'datetime', value);
-};
-var _elm_lang$html$Html_Attributes$pubdate = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'pubdate', value);
-};
-var _elm_lang$html$Html_Attributes$start = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'start',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$colspan = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'colSpan',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$headers = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'headers', value);
-};
-var _elm_lang$html$Html_Attributes$rowspan = function (n) {
-	return A2(
-		_elm_lang$html$Html_Attributes$stringProperty,
-		'rowSpan',
-		_elm_lang$core$Basics$toString(n));
-};
-var _elm_lang$html$Html_Attributes$scope = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'scope', value);
-};
-var _elm_lang$html$Html_Attributes$manifest = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$stringProperty, 'manifest', value);
-};
-var _elm_lang$html$Html_Attributes$boolProperty = F2(
-	function (name, bool) {
-		return A2(
-			_elm_lang$html$Html_Attributes$property,
-			name,
-			_elm_lang$core$Json_Encode$bool(bool));
-	});
-var _elm_lang$html$Html_Attributes$hidden = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'hidden', bool);
-};
-var _elm_lang$html$Html_Attributes$contenteditable = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'contentEditable', bool);
-};
-var _elm_lang$html$Html_Attributes$spellcheck = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'spellcheck', bool);
-};
-var _elm_lang$html$Html_Attributes$async = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'async', bool);
-};
-var _elm_lang$html$Html_Attributes$defer = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'defer', bool);
-};
-var _elm_lang$html$Html_Attributes$scoped = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'scoped', bool);
-};
-var _elm_lang$html$Html_Attributes$autoplay = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'autoplay', bool);
-};
-var _elm_lang$html$Html_Attributes$controls = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'controls', bool);
-};
-var _elm_lang$html$Html_Attributes$loop = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'loop', bool);
-};
-var _elm_lang$html$Html_Attributes$default = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'default', bool);
-};
-var _elm_lang$html$Html_Attributes$seamless = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'seamless', bool);
-};
-var _elm_lang$html$Html_Attributes$checked = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'checked', bool);
-};
-var _elm_lang$html$Html_Attributes$selected = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'selected', bool);
-};
-var _elm_lang$html$Html_Attributes$autofocus = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'autofocus', bool);
-};
-var _elm_lang$html$Html_Attributes$disabled = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'disabled', bool);
-};
-var _elm_lang$html$Html_Attributes$multiple = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'multiple', bool);
-};
-var _elm_lang$html$Html_Attributes$novalidate = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'noValidate', bool);
-};
-var _elm_lang$html$Html_Attributes$readonly = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'readOnly', bool);
-};
-var _elm_lang$html$Html_Attributes$required = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'required', bool);
-};
-var _elm_lang$html$Html_Attributes$ismap = function (value) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'isMap', value);
-};
-var _elm_lang$html$Html_Attributes$download = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'download', bool);
-};
-var _elm_lang$html$Html_Attributes$reversed = function (bool) {
-	return A2(_elm_lang$html$Html_Attributes$boolProperty, 'reversed', bool);
-};
-var _elm_lang$html$Html_Attributes$classList = function (list) {
-	return _elm_lang$html$Html_Attributes$class(
-		A2(
-			_elm_lang$core$String$join,
-			' ',
-			A2(
-				_elm_lang$core$List$map,
-				_elm_lang$core$Basics$fst,
-				A2(_elm_lang$core$List$filter, _elm_lang$core$Basics$snd, list))));
-};
-var _elm_lang$html$Html_Attributes$style = _elm_lang$virtual_dom$VirtualDom$style;
-var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode_ops[':='], 'keyCode', _elm_lang$core$Json_Decode$int);
-var _elm_lang$html$Html_Events$targetChecked = A2(
-	_elm_lang$core$Json_Decode$at,
-	_elm_lang$core$Native_List.fromArray(
-		['target', 'checked']),
-	_elm_lang$core$Json_Decode$bool);
-var _elm_lang$html$Html_Events$targetValue = A2(
-	_elm_lang$core$Json_Decode$at,
-	_elm_lang$core$Native_List.fromArray(
-		['target', 'value']),
-	_elm_lang$core$Json_Decode$string);
-var _elm_lang$html$Html_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
-var _elm_lang$html$Html_Events$onWithOptions = _elm_lang$virtual_dom$VirtualDom$onWithOptions;
-var _elm_lang$html$Html_Events$on = _elm_lang$virtual_dom$VirtualDom$on;
-var _elm_lang$html$Html_Events$onFocus = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'focus',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onBlur = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'blur',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onSubmitOptions = _elm_lang$core$Native_Utils.update(
-	_elm_lang$html$Html_Events$defaultOptions,
-	{preventDefault: true});
-var _elm_lang$html$Html_Events$onSubmit = function (msg) {
-	return A3(
-		_elm_lang$html$Html_Events$onWithOptions,
-		'submit',
-		_elm_lang$html$Html_Events$onSubmitOptions,
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onCheck = function (tagger) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'change',
-		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetChecked));
-};
-var _elm_lang$html$Html_Events$onInput = function (tagger) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'input',
-		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetValue));
-};
-var _elm_lang$html$Html_Events$onMouseOut = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseout',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseOver = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseover',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseLeave = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseleave',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseEnter = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseenter',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseUp = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseup',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseDown = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mousedown',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onDoubleClick = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'dblclick',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onClick = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'click',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$Options = F2(
-	function (a, b) {
-		return {stopPropagation: a, preventDefault: b};
-	});
 var _elm_lang$svg$Svg$text = _elm_lang$virtual_dom$VirtualDom$text;
 var _elm_lang$svg$Svg$svgNamespace = A2(
 	_elm_lang$virtual_dom$VirtualDom$property,
@@ -8575,6 +8087,43 @@ var _elm_lang$svg$Svg$filter = _elm_lang$svg$Svg$node('filter');
 var _elm_lang$svg$Svg$script = _elm_lang$svg$Svg$node('script');
 var _elm_lang$svg$Svg$style = _elm_lang$svg$Svg$node('style');
 var _elm_lang$svg$Svg$view = _elm_lang$svg$Svg$node('view');
+var _elm_lang$html$Html_App$programWithFlags = _elm_lang$virtual_dom$VirtualDom$programWithFlags;
+var _elm_lang$html$Html_App$program = function (app) {
+	return _elm_lang$html$Html_App$programWithFlags(
+		_elm_lang$core$Native_Utils.update(
+			app,
+			{
+				init: function (_p0) {
+					return app.init;
+				}
+			}));
+};
+var _elm_lang$html$Html_App$beginnerProgram = function (_p1) {
+	var _p2 = _p1;
+	return _elm_lang$html$Html_App$programWithFlags(
+		{
+			init: function (_p3) {
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_p2.model,
+					_elm_lang$core$Native_List.fromArray(
+						[]));
+			},
+			update: F2(
+				function (msg, model) {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						A2(_p2.update, msg, model),
+						_elm_lang$core$Native_List.fromArray(
+							[]));
+				}),
+			view: _p2.view,
+			subscriptions: function (_p4) {
+				return _elm_lang$core$Platform_Sub$none;
+			}
+		});
+};
+var _elm_lang$html$Html_App$map = _elm_lang$virtual_dom$VirtualDom$map;
 var _elm_lang$svg$Svg_Attributes$writingMode = _elm_lang$virtual_dom$VirtualDom$attribute('writing-mode');
 var _elm_lang$svg$Svg_Attributes$wordSpacing = _elm_lang$virtual_dom$VirtualDom$attribute('word-spacing');
 var _elm_lang$svg$Svg_Attributes$visibility = _elm_lang$virtual_dom$VirtualDom$attribute('visibility');
@@ -9296,6 +8845,198 @@ var _elm_lang$window$Window$subMap = F2(
 			});
 	});
 _elm_lang$core$Native_Platform.effectManagers['Window'] = {pkg: 'elm-lang/window', init: _elm_lang$window$Window$init, onEffects: _elm_lang$window$Window$onEffects, onSelfMsg: _elm_lang$window$Window$onSelfMsg, tag: 'sub', subMap: _elm_lang$window$Window$subMap};
+var _NoRedInk$elm_task_extra$Task_Extra$never = function (n) {
+	never:
+	while (true) {
+		var _v0 = n;
+		n = _v0;
+		continue never;
+	}
+};
+var _NoRedInk$elm_task_extra$Task_Extra$performFailproof = _elm_lang$core$Task$perform(_NoRedInk$elm_task_extra$Task_Extra$never);
+var _NoRedInk$elm_task_extra$Task_Extra$delay = F2(
+	function (time, task) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			_elm_lang$core$Process$sleep(time),
+			function (_p0) {
+				return task;
+			});
+	});
+var _NoRedInk$elm_task_extra$Task_Extra$loop = F2(
+	function (every, task) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			task,
+			function (_p1) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					_elm_lang$core$Process$sleep(every),
+					function (_p2) {
+						return A2(_NoRedInk$elm_task_extra$Task_Extra$loop, every, task);
+					});
+			});
+	});
+var _NoRedInk$elm_task_extra$Task_Extra$optional = function (list) {
+	var _p3 = list;
+	if (_p3.ctor === '[]') {
+		return _elm_lang$core$Task$succeed(
+			_elm_lang$core$Native_List.fromArray(
+				[]));
+	} else {
+		var _p5 = _p3._1;
+		return A2(
+			_elm_lang$core$Task$onError,
+			A2(
+				_elm_lang$core$Task$andThen,
+				_p3._0,
+				function (value) {
+					return A2(
+						_elm_lang$core$Task$map,
+						F2(
+							function (x, y) {
+								return A2(_elm_lang$core$List_ops['::'], x, y);
+							})(value),
+						_NoRedInk$elm_task_extra$Task_Extra$optional(_p5));
+				}),
+			function (_p4) {
+				return _NoRedInk$elm_task_extra$Task_Extra$optional(_p5);
+			});
+	}
+};
+var _NoRedInk$elm_task_extra$Task_Extra$parallel = function (tasks) {
+	return _elm_lang$core$Task$sequence(
+		A2(_elm_lang$core$List$map, _elm_lang$core$Process$spawn, tasks));
+};
+var _elm_community$easing_functions$Ease$reverse = F2(
+	function (easing, time) {
+		return easing(1 - time);
+	});
+var _elm_community$easing_functions$Ease$flip = F2(
+	function (easing, time) {
+		return 1 - easing(1 - time);
+	});
+var _elm_community$easing_functions$Ease$retour = F2(
+	function (easing, time) {
+		return (_elm_lang$core$Native_Utils.cmp(time, 0.5) < 0) ? easing(time * 2) : A2(_elm_community$easing_functions$Ease$flip, easing, (time - 0.5) * 2);
+	});
+var _elm_community$easing_functions$Ease$inOut = F3(
+	function (e1, e2, time) {
+		return (_elm_lang$core$Native_Utils.cmp(time, 0.5) < 0) ? (e1(time * 2) / 2) : (0.5 + (e2((time - 0.5) * 2) / 2));
+	});
+var _elm_community$easing_functions$Ease$inElastic = function (time) {
+	if (_elm_lang$core$Native_Utils.eq(time, 0.0)) {
+		return 0.0;
+	} else {
+		var t$ = time - 1;
+		var p = 0.3;
+		var s = 7.5e-2;
+		return 0 - (Math.pow(2, 10 * t$) * _elm_lang$core$Basics$sin(((t$ - s) * (2 * _elm_lang$core$Basics$pi)) / p));
+	}
+};
+var _elm_community$easing_functions$Ease$outElastic = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$inElastic);
+var _elm_community$easing_functions$Ease$inOutElastic = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inElastic, _elm_community$easing_functions$Ease$outElastic);
+var _elm_community$easing_functions$Ease$outBounce = function (time) {
+	var t4 = time - (2.625 / 2.75);
+	var t3 = time - (2.25 / 2.75);
+	var t2 = time - (1.5 / 2.75);
+	var a = 7.5625;
+	return (_elm_lang$core$Native_Utils.cmp(time, 1 / 2.75) < 0) ? ((a * time) * time) : ((_elm_lang$core$Native_Utils.cmp(time, 2 / 2.75) < 0) ? (((a * t2) * t2) + 0.75) : ((_elm_lang$core$Native_Utils.cmp(time, 2.5 / 2.75) < 0) ? (((a * t3) * t3) + 0.9375) : (((a * t4) * t4) + 0.984375)));
+};
+var _elm_community$easing_functions$Ease$inBounce = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$outBounce);
+var _elm_community$easing_functions$Ease$inOutBounce = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inBounce, _elm_community$easing_functions$Ease$outBounce);
+var _elm_community$easing_functions$Ease$inBack = function (time) {
+	return (time * time) * ((2.70158 * time) - 1.70158);
+};
+var _elm_community$easing_functions$Ease$outBack = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$inBack);
+var _elm_community$easing_functions$Ease$inOutBack = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inBack, _elm_community$easing_functions$Ease$outBack);
+var _elm_community$easing_functions$Ease$outCirc = function (time) {
+	return _elm_lang$core$Basics$sqrt(
+		1 - Math.pow(time - 1, 2));
+};
+var _elm_community$easing_functions$Ease$inCirc = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$outCirc);
+var _elm_community$easing_functions$Ease$inOutCirc = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inCirc, _elm_community$easing_functions$Ease$outCirc);
+var _elm_community$easing_functions$Ease$inExpo = function (time) {
+	return _elm_lang$core$Native_Utils.eq(time, 0.0) ? 0.0 : Math.pow(2, 10 * (time - 1));
+};
+var _elm_community$easing_functions$Ease$outExpo = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$inExpo);
+var _elm_community$easing_functions$Ease$inOutExpo = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inExpo, _elm_community$easing_functions$Ease$outExpo);
+var _elm_community$easing_functions$Ease$outSine = function (time) {
+	return _elm_lang$core$Basics$sin(time * (_elm_lang$core$Basics$pi / 2));
+};
+var _elm_community$easing_functions$Ease$inSine = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$outSine);
+var _elm_community$easing_functions$Ease$inOutSine = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inSine, _elm_community$easing_functions$Ease$outSine);
+var _elm_community$easing_functions$Ease$inQuint = function (time) {
+	return Math.pow(time, 5);
+};
+var _elm_community$easing_functions$Ease$outQuint = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$inQuint);
+var _elm_community$easing_functions$Ease$inOutQuint = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inQuint, _elm_community$easing_functions$Ease$outQuint);
+var _elm_community$easing_functions$Ease$inQuart = function (time) {
+	return Math.pow(time, 4);
+};
+var _elm_community$easing_functions$Ease$outQuart = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$inQuart);
+var _elm_community$easing_functions$Ease$inOutQuart = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inQuart, _elm_community$easing_functions$Ease$outQuart);
+var _elm_community$easing_functions$Ease$inCubic = function (time) {
+	return Math.pow(time, 3);
+};
+var _elm_community$easing_functions$Ease$outCubic = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$inCubic);
+var _elm_community$easing_functions$Ease$inOutCubic = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inCubic, _elm_community$easing_functions$Ease$outCubic);
+var _elm_community$easing_functions$Ease$inQuad = function (time) {
+	return Math.pow(time, 2);
+};
+var _elm_community$easing_functions$Ease$outQuad = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$inQuad);
+var _elm_community$easing_functions$Ease$inOutQuad = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inQuad, _elm_community$easing_functions$Ease$outQuad);
+var _elm_community$easing_functions$Ease$bezier = F5(
+	function (x1, y1, x2, y2, time) {
+		var pair = F4(
+			function (interpolate, _p1, _p0, v) {
+				var _p2 = _p1;
+				var _p3 = _p0;
+				return {
+					ctor: '_Tuple2',
+					_0: A3(interpolate, _p2._0, _p3._0, v),
+					_1: A3(interpolate, _p2._1, _p3._1, v)
+				};
+			});
+		var lerp = F3(
+			function (from, to, v) {
+				return from + ((to - from) * v);
+			});
+		var casteljau = function (ps) {
+			casteljau:
+			while (true) {
+				var _p4 = ps;
+				if (((_p4.ctor === '::') && (_p4._0.ctor === '_Tuple2')) && (_p4._1.ctor === '[]')) {
+					return _p4._0._1;
+				} else {
+					var _p5 = _p4;
+					var _v3 = A3(
+						_elm_lang$core$List$map2,
+						F2(
+							function (x, y) {
+								return A4(pair, lerp, x, y, time);
+							}),
+						_p5,
+						A2(
+							_elm_lang$core$Maybe$withDefault,
+							_elm_lang$core$Native_List.fromArray(
+								[]),
+							_elm_lang$core$List$tail(_p5)));
+					ps = _v3;
+					continue casteljau;
+				}
+			}
+		};
+		return casteljau(
+			_elm_lang$core$Native_List.fromArray(
+				[
+					{ctor: '_Tuple2', _0: 0, _1: 0},
+					{ctor: '_Tuple2', _0: x1, _1: y1},
+					{ctor: '_Tuple2', _0: x2, _1: y2},
+					{ctor: '_Tuple2', _0: 1, _1: 1}
+				]));
+	});
+var _elm_community$easing_functions$Ease$linear = _elm_lang$core$Basics$identity;
 
 /*
  * Copyright (c) 2010 Mozilla Corporation
@@ -9496,6 +9237,36 @@ var _elm_community$elm_linear_algebra$Math_Vector2$getY = _elm_community$elm_lin
 var _elm_community$elm_linear_algebra$Math_Vector2$getX = _elm_community$elm_linear_algebra$Native_Math_Vector2.getX;
 var _elm_community$elm_linear_algebra$Math_Vector2$vec2 = _elm_community$elm_linear_algebra$Native_Math_Vector2.vec2;
 var _elm_community$elm_linear_algebra$Math_Vector2$Vec2 = {ctor: 'Vec2'};
+var _ManuScriptHub$elm_pagescroll$Util$offset = function (_p0) {
+	var _p1 = _p0;
+	return _elm_lang$svg$Svg_Attributes$transform(
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'translate (',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(_p1._0),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					',',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$toString(_p1._1),
+						')')))));
+};
+var _ManuScriptHub$elm_pagescroll$Util$viewBox = function (_p2) {
+	var _p3 = _p2;
+	var _p5 = _p3.width;
+	var _p4 = _p3.height;
+	return A2(
+		_elm_lang$core$String$join,
+		' ',
+		A2(
+			_elm_lang$core$List$map,
+			_elm_lang$core$Basics$toString,
+			_elm_lang$core$Native_List.fromArray(
+				[((0 - _p5) / 2) | 0, ((0 - _p4) / 2) | 0, _p5, _p4])));
+};
 var _ManuScriptHub$elm_pagescroll$Util$multiplyVec = F2(
 	function (v1, v2) {
 		return A2(
@@ -9520,31 +9291,31 @@ var _ManuScriptHub$elm_pagescroll$Util$toIntRecord = function (v) {
 			_elm_community$elm_linear_algebra$Math_Vector2$getY(v))
 	};
 };
-var _ManuScriptHub$elm_pagescroll$Util$fromIntRecord = function (_p0) {
-	var _p1 = _p0;
+var _ManuScriptHub$elm_pagescroll$Util$fromIntRecord = function (_p6) {
+	var _p7 = _p6;
 	return _elm_community$elm_linear_algebra$Math_Vector2$fromTuple(
 		{
 			ctor: '_Tuple2',
-			_0: _elm_lang$core$Basics$toFloat(_p1.x),
-			_1: _elm_lang$core$Basics$toFloat(_p1.y)
+			_0: _elm_lang$core$Basics$toFloat(_p7.x),
+			_1: _elm_lang$core$Basics$toFloat(_p7.y)
 		});
 };
-var _ManuScriptHub$elm_pagescroll$Util$fromIntTuple = function (_p2) {
-	var _p3 = _p2;
+var _ManuScriptHub$elm_pagescroll$Util$fromIntTuple = function (_p8) {
+	var _p9 = _p8;
 	return _ManuScriptHub$elm_pagescroll$Util$fromIntRecord(
-		{x: _p3._0, y: _p3._1});
+		{x: _p9._0, y: _p9._1});
 };
 var _ManuScriptHub$elm_pagescroll$Util$updateOne = F3(
-	function (update, msg, _p4) {
-		var _p5 = _p4;
-		var _p6 = A2(update, msg, _p5._0);
-		var next = _p6._0;
-		var nextEffect = _p6._1;
+	function (update, msg, _p10) {
+		var _p11 = _p10;
+		var _p12 = A2(update, msg, _p11._0);
+		var next = _p12._0;
+		var nextEffect = _p12._1;
 		return A2(
 			_elm_lang$core$Platform_Cmd_ops['!'],
 			next,
 			_elm_lang$core$Native_List.fromArray(
-				[_p5._1, nextEffect]));
+				[_p11._1, nextEffect]));
 	});
 var _ManuScriptHub$elm_pagescroll$Util$updateMany = F3(
 	function (msgs, update, modelCmd) {
@@ -9582,587 +9353,778 @@ var _ManuScriptHub$elm_pagescroll$Util$vecToSvgPos = function (vec) {
 var _ManuScriptHub$elm_pagescroll$Util$noFx = function (m) {
 	return {ctor: '_Tuple2', _0: m, _1: _elm_lang$core$Platform_Cmd$none};
 };
-var _elm_community$easing_functions$Ease$reverse = F2(
-	function (easing, time) {
-		return easing(1 - time);
+var _ManuScriptHub$elm_pagescroll$Rows$canShift = F2(
+	function (_p0, dir) {
+		var _p1 = _p0;
+		var _p2 = dir;
+		_v1_4:
+		do {
+			switch (_p2._0) {
+				case 0:
+					switch (_p2._1) {
+						case -1:
+							return _elm_lang$core$Native_Utils.cmp(
+								_elm_lang$core$List$length(_p1._0),
+								0) > 0;
+						case 1:
+							return _elm_lang$core$Native_Utils.cmp(
+								_elm_lang$core$List$length(_p1._2),
+								0) > 0;
+						default:
+							break _v1_4;
+					}
+				case -1:
+					if (_p2._1 === 0) {
+						return _elm_lang$core$Native_Utils.cmp(
+							_elm_lang$core$List$length(_p1._1._0),
+							0) > 0;
+					} else {
+						break _v1_4;
+					}
+				case 1:
+					if (_p2._1 === 0) {
+						return _elm_lang$core$Native_Utils.cmp(
+							_elm_lang$core$List$length(_p1._1._2),
+							0) > 0;
+					} else {
+						break _v1_4;
+					}
+				default:
+					break _v1_4;
+			}
+		} while(false);
+		return false;
 	});
-var _elm_community$easing_functions$Ease$flip = F2(
-	function (easing, time) {
-		return 1 - easing(1 - time);
+var _ManuScriptHub$elm_pagescroll$Rows$maxCols = function (_p3) {
+	var _p4 = _p3;
+	var lensMid = (_elm_lang$core$List$length(_p4._1._0) + _elm_lang$core$List$length(_p4._1._2)) + 1;
+	var lensBot = A2(
+		_elm_lang$core$Maybe$withDefault,
+		0,
+		_elm_lang$core$List$maximum(
+			A2(
+				_elm_lang$core$List$map,
+				function (_p5) {
+					var _p6 = _p5;
+					return (_elm_lang$core$List$length(_p6._0) + _elm_lang$core$List$length(_p6._2)) + 1;
+				},
+				_p4._2)));
+	var lensTop = A2(
+		_elm_lang$core$Maybe$withDefault,
+		0,
+		_elm_lang$core$List$maximum(
+			A2(
+				_elm_lang$core$List$map,
+				function (_p7) {
+					var _p8 = _p7;
+					return (_elm_lang$core$List$length(_p8._0) + _elm_lang$core$List$length(_p8._2)) + 1;
+				},
+				_p4._0)));
+	var m1 = A2(_elm_lang$core$Basics$max, lensTop, lensBot);
+	var m2 = A2(_elm_lang$core$Basics$max, m1, lensMid);
+	return m2;
+};
+var _ManuScriptHub$elm_pagescroll$Rows$Cols = F3(
+	function (a, b, c) {
+		return {ctor: 'Cols', _0: a, _1: b, _2: c};
 	});
-var _elm_community$easing_functions$Ease$retour = F2(
-	function (easing, time) {
-		return (_elm_lang$core$Native_Utils.cmp(time, 0.5) < 0) ? easing(time * 2) : A2(_elm_community$easing_functions$Ease$flip, easing, (time - 0.5) * 2);
-	});
-var _elm_community$easing_functions$Ease$inOut = F3(
-	function (e1, e2, time) {
-		return (_elm_lang$core$Native_Utils.cmp(time, 0.5) < 0) ? (e1(time * 2) / 2) : (0.5 + (e2((time - 0.5) * 2) / 2));
-	});
-var _elm_community$easing_functions$Ease$inElastic = function (time) {
-	if (_elm_lang$core$Native_Utils.eq(time, 0.0)) {
-		return 0.0;
+var _ManuScriptHub$elm_pagescroll$Rows$shiftLeft = function (_p9) {
+	var _p10 = _p9;
+	var _p14 = _p10._2;
+	var _p13 = _p10._0;
+	var _p12 = _p10._1;
+	var _p11 = _p13;
+	if (_p11.ctor === '[]') {
+		return A3(_ManuScriptHub$elm_pagescroll$Rows$Cols, _p13, _p12, _p14);
 	} else {
-		var t$ = time - 1;
-		var p = 0.3;
-		var s = 7.5e-2;
-		return 0 - (Math.pow(2, 10 * t$) * _elm_lang$core$Basics$sin(((t$ - s) * (2 * _elm_lang$core$Basics$pi)) / p));
+		return A3(
+			_ManuScriptHub$elm_pagescroll$Rows$Cols,
+			_p11._1,
+			_p11._0,
+			A2(_elm_lang$core$List_ops['::'], _p12, _p14));
 	}
 };
-var _elm_community$easing_functions$Ease$outElastic = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$inElastic);
-var _elm_community$easing_functions$Ease$inOutElastic = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inElastic, _elm_community$easing_functions$Ease$outElastic);
-var _elm_community$easing_functions$Ease$outBounce = function (time) {
-	var t4 = time - (2.625 / 2.75);
-	var t3 = time - (2.25 / 2.75);
-	var t2 = time - (1.5 / 2.75);
-	var a = 7.5625;
-	return (_elm_lang$core$Native_Utils.cmp(time, 1 / 2.75) < 0) ? ((a * time) * time) : ((_elm_lang$core$Native_Utils.cmp(time, 2 / 2.75) < 0) ? (((a * t2) * t2) + 0.75) : ((_elm_lang$core$Native_Utils.cmp(time, 2.5 / 2.75) < 0) ? (((a * t3) * t3) + 0.9375) : (((a * t4) * t4) + 0.984375)));
+var _ManuScriptHub$elm_pagescroll$Rows$shiftRight = function (_p15) {
+	var _p16 = _p15;
+	var _p20 = _p16._2;
+	var _p19 = _p16._0;
+	var _p18 = _p16._1;
+	var _p17 = _p20;
+	if (_p17.ctor === '[]') {
+		return A3(_ManuScriptHub$elm_pagescroll$Rows$Cols, _p19, _p18, _p20);
+	} else {
+		return A3(
+			_ManuScriptHub$elm_pagescroll$Rows$Cols,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_p19,
+				_elm_lang$core$Native_List.fromArray(
+					[_p18])),
+			_p17._0,
+			_p17._1);
+	}
 };
-var _elm_community$easing_functions$Ease$inBounce = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$outBounce);
-var _elm_community$easing_functions$Ease$inOutBounce = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inBounce, _elm_community$easing_functions$Ease$outBounce);
-var _elm_community$easing_functions$Ease$inBack = function (time) {
-	return (time * time) * ((2.70158 * time) - 1.70158);
-};
-var _elm_community$easing_functions$Ease$outBack = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$inBack);
-var _elm_community$easing_functions$Ease$inOutBack = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inBack, _elm_community$easing_functions$Ease$outBack);
-var _elm_community$easing_functions$Ease$outCirc = function (time) {
-	return _elm_lang$core$Basics$sqrt(
-		1 - Math.pow(time - 1, 2));
-};
-var _elm_community$easing_functions$Ease$inCirc = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$outCirc);
-var _elm_community$easing_functions$Ease$inOutCirc = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inCirc, _elm_community$easing_functions$Ease$outCirc);
-var _elm_community$easing_functions$Ease$inExpo = function (time) {
-	return _elm_lang$core$Native_Utils.eq(time, 0.0) ? 0.0 : Math.pow(2, 10 * (time - 1));
-};
-var _elm_community$easing_functions$Ease$outExpo = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$inExpo);
-var _elm_community$easing_functions$Ease$inOutExpo = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inExpo, _elm_community$easing_functions$Ease$outExpo);
-var _elm_community$easing_functions$Ease$outSine = function (time) {
-	return _elm_lang$core$Basics$sin(time * (_elm_lang$core$Basics$pi / 2));
-};
-var _elm_community$easing_functions$Ease$inSine = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$outSine);
-var _elm_community$easing_functions$Ease$inOutSine = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inSine, _elm_community$easing_functions$Ease$outSine);
-var _elm_community$easing_functions$Ease$inQuint = function (time) {
-	return Math.pow(time, 5);
-};
-var _elm_community$easing_functions$Ease$outQuint = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$inQuint);
-var _elm_community$easing_functions$Ease$inOutQuint = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inQuint, _elm_community$easing_functions$Ease$outQuint);
-var _elm_community$easing_functions$Ease$inQuart = function (time) {
-	return Math.pow(time, 4);
-};
-var _elm_community$easing_functions$Ease$outQuart = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$inQuart);
-var _elm_community$easing_functions$Ease$inOutQuart = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inQuart, _elm_community$easing_functions$Ease$outQuart);
-var _elm_community$easing_functions$Ease$inCubic = function (time) {
-	return Math.pow(time, 3);
-};
-var _elm_community$easing_functions$Ease$outCubic = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$inCubic);
-var _elm_community$easing_functions$Ease$inOutCubic = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inCubic, _elm_community$easing_functions$Ease$outCubic);
-var _elm_community$easing_functions$Ease$inQuad = function (time) {
-	return Math.pow(time, 2);
-};
-var _elm_community$easing_functions$Ease$outQuad = _elm_community$easing_functions$Ease$flip(_elm_community$easing_functions$Ease$inQuad);
-var _elm_community$easing_functions$Ease$inOutQuad = A2(_elm_community$easing_functions$Ease$inOut, _elm_community$easing_functions$Ease$inQuad, _elm_community$easing_functions$Ease$outQuad);
-var _elm_community$easing_functions$Ease$bezier = F5(
-	function (x1, y1, x2, y2, time) {
-		var pair = F4(
-			function (interpolate, _p1, _p0, v) {
-				var _p2 = _p1;
-				var _p3 = _p0;
-				return {
-					ctor: '_Tuple2',
-					_0: A3(interpolate, _p2._0, _p3._0, v),
-					_1: A3(interpolate, _p2._1, _p3._1, v)
-				};
-			});
-		var lerp = F3(
-			function (from, to, v) {
-				return from + ((to - from) * v);
-			});
-		var casteljau = function (ps) {
-			casteljau:
-			while (true) {
-				var _p4 = ps;
-				if (((_p4.ctor === '::') && (_p4._0.ctor === '_Tuple2')) && (_p4._1.ctor === '[]')) {
-					return _p4._0._1;
-				} else {
-					var _p5 = _p4;
-					var _v3 = A3(
-						_elm_lang$core$List$map2,
-						F2(
-							function (x, y) {
-								return A4(pair, lerp, x, y, time);
-							}),
-						_p5,
-						A2(
-							_elm_lang$core$Maybe$withDefault,
-							_elm_lang$core$Native_List.fromArray(
-								[]),
-							_elm_lang$core$List$tail(_p5)));
-					ps = _v3;
-					continue casteljau;
-				}
-			}
-		};
-		return casteljau(
-			_elm_lang$core$Native_List.fromArray(
-				[
-					{ctor: '_Tuple2', _0: 0, _1: 0},
-					{ctor: '_Tuple2', _0: x1, _1: y1},
-					{ctor: '_Tuple2', _0: x2, _1: y2},
-					{ctor: '_Tuple2', _0: 1, _1: 1}
-				]));
+var _ManuScriptHub$elm_pagescroll$Rows$Rows = F3(
+	function (a, b, c) {
+		return {ctor: 'Rows', _0: a, _1: b, _2: c};
 	});
-var _elm_community$easing_functions$Ease$linear = _elm_lang$core$Basics$identity;
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$defaultPos = {x: 0, y: 0};
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$defaultCell = {
-	html: A2(
-		_elm_lang$html$Html$h1,
+var _ManuScriptHub$elm_pagescroll$Rows$shiftUp = function (_p21) {
+	var _p22 = _p21;
+	var _p26 = _p22._0;
+	var _p25 = _p22._1;
+	var _p24 = _p22._2;
+	var _p23 = _p26;
+	if (_p23.ctor === '[]') {
+		return A3(_ManuScriptHub$elm_pagescroll$Rows$Rows, _p26, _p25, _p24);
+	} else {
+		return A3(
+			_ManuScriptHub$elm_pagescroll$Rows$Rows,
+			_p23._1,
+			_p23._0,
+			A2(_elm_lang$core$List_ops['::'], _p25, _p24));
+	}
+};
+var _ManuScriptHub$elm_pagescroll$Rows$shiftDown = function (_p27) {
+	var _p28 = _p27;
+	var _p32 = _p28._0;
+	var _p31 = _p28._1;
+	var _p30 = _p28._2;
+	var _p29 = _p30;
+	if (_p29.ctor === '[]') {
+		return A3(_ManuScriptHub$elm_pagescroll$Rows$Rows, _p32, _p31, _p30);
+	} else {
+		return A3(
+			_ManuScriptHub$elm_pagescroll$Rows$Rows,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_p32,
+				_elm_lang$core$Native_List.fromArray(
+					[_p31])),
+			_p29._0,
+			_p29._1);
+	}
+};
+var _ManuScriptHub$elm_pagescroll$Rows$shift = F2(
+	function (_p33, dir) {
+		var _p34 = _p33;
+		var _p38 = _p34._0;
+		var _p37 = _p34._1;
+		var _p36 = _p34._2;
+		var _p35 = dir;
+		_v14_4:
+		do {
+			switch (_p35._0) {
+				case -1:
+					if (_p35._1 === 0) {
+						return A3(
+							_ManuScriptHub$elm_pagescroll$Rows$Rows,
+							_p38,
+							_ManuScriptHub$elm_pagescroll$Rows$shiftLeft(_p37),
+							_p36);
+					} else {
+						break _v14_4;
+					}
+				case 1:
+					if (_p35._1 === 0) {
+						return A3(
+							_ManuScriptHub$elm_pagescroll$Rows$Rows,
+							_p38,
+							_ManuScriptHub$elm_pagescroll$Rows$shiftRight(_p37),
+							_p36);
+					} else {
+						break _v14_4;
+					}
+				case 0:
+					switch (_p35._1) {
+						case 1:
+							return _ManuScriptHub$elm_pagescroll$Rows$shiftDown(
+								A3(_ManuScriptHub$elm_pagescroll$Rows$Rows, _p38, _p37, _p36));
+						case -1:
+							return _ManuScriptHub$elm_pagescroll$Rows$shiftUp(
+								A3(_ManuScriptHub$elm_pagescroll$Rows$Rows, _p38, _p37, _p36));
+						default:
+							break _v14_4;
+					}
+				default:
+					break _v14_4;
+			}
+		} while(false);
+		return A3(_ManuScriptHub$elm_pagescroll$Rows$Rows, _p38, _p37, _p36);
+	});
+var _ManuScriptHub$elm_pagescroll$Pane$oppositeOf = function (_p0) {
+	var _p1 = _p0;
+	return {ctor: '_Tuple2', _0: 0 - _p1._0, _1: 0 - _p1._1};
+};
+var _ManuScriptHub$elm_pagescroll$Pane$add = F2(
+	function (_p3, _p2) {
+		var _p4 = _p3;
+		var _p5 = _p2;
+		return {ctor: '_Tuple2', _0: _p4._0 + _p5._0, _1: _p4._1 + _p5._1};
+	});
+var _ManuScriptHub$elm_pagescroll$Pane$defaultRect = F2(
+	function (size, style) {
+		return _elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$svg$Svg_Attributes$x(
+				_elm_lang$core$Basics$toString(((0 - size.width) / 2) | 0)),
+				_elm_lang$svg$Svg_Attributes$y(
+				_elm_lang$core$Basics$toString(((0 - size.height) / 2) | 0)),
+				_elm_lang$svg$Svg_Attributes$width(
+				_elm_lang$core$Basics$toString(size.width)),
+				_elm_lang$svg$Svg_Attributes$height(
+				_elm_lang$core$Basics$toString(size.height)),
+				_elm_lang$svg$Svg_Attributes$style(style)
+			]);
+	});
+var _ManuScriptHub$elm_pagescroll$Pane$windowSize = function (m) {
+	return {
+		width: _elm_lang$core$Basics$round(
+			0.9 * _elm_lang$core$Basics$toFloat(m.windowSize.width)),
+		height: _elm_lang$core$Basics$round(
+			0.9 * _elm_lang$core$Basics$toFloat(m.windowSize.height))
+	};
+};
+var _ManuScriptHub$elm_pagescroll$Pane$cellSize = function (m) {
+	var _p6 = _ManuScriptHub$elm_pagescroll$Pane$windowSize(m);
+	var width = _p6.width;
+	var height = _p6.height;
+	var max = A2(_elm_lang$core$Basics$min, width, height);
+	return {width: (width / 4) | 0, height: (height / 4) | 0};
+};
+var _ManuScriptHub$elm_pagescroll$Pane$pageOffset = function (model) {
+	var size = _ManuScriptHub$elm_pagescroll$Pane$cellSize(model);
+	return {
+		ctor: '_Tuple2',
+		_0: _elm_lang$core$Basics$toFloat(
+			_elm_lang$core$Basics$fst(model.curPage) * (0 - size.width)),
+		_1: _elm_lang$core$Basics$toFloat(
+			_elm_lang$core$Basics$snd(model.curPage) * (0 - size.height))
+	};
+};
+var _ManuScriptHub$elm_pagescroll$Pane$zeroState = F2(
+	function (s, d) {
+		return {ctor: '_Tuple2', _0: 0, _1: 0};
+	});
+var _ManuScriptHub$elm_pagescroll$Pane$scrollAnimation = A2(
+	_szabba$elm_animations$Animation$map,
+	F3(
+		function (t, size, dir) {
+			return {
+				ctor: '_Tuple2',
+				_0: ((0 - t) * _elm_lang$core$Basics$toFloat(
+					_elm_lang$core$Basics$fst(dir))) * _elm_lang$core$Basics$toFloat(size.width),
+				_1: ((0 - t) * _elm_lang$core$Basics$toFloat(
+					_elm_lang$core$Basics$snd(dir))) * _elm_lang$core$Basics$toFloat(size.height)
+			};
+		}),
+	A2(
+		_szabba$elm_animations$Animation$map,
+		_elm_community$easing_functions$Ease$inOutBack,
+		_szabba$elm_animations$Animation$interval(0.5 * _elm_lang$core$Time$second)));
+var _ManuScriptHub$elm_pagescroll$Pane$center = function (model) {
+	var _p7 = model.rows;
+	var top = _p7._0;
+	var left = _p7._1._0;
+	var center = _p7._1._1;
+	var right = _p7._1._2;
+	var bot = _p7._2;
+	return center;
+};
+var _ManuScriptHub$elm_pagescroll$Pane$emptyCols = A3(
+	_ManuScriptHub$elm_pagescroll$Rows$Cols,
+	_elm_lang$core$Native_List.fromArray(
+		[]),
+	A2(
+		_elm_lang$svg$Svg$g,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[])),
+	_elm_lang$core$Native_List.fromArray(
+		[]));
+var _ManuScriptHub$elm_pagescroll$Pane$fromText = function (str) {
+	return A2(
+		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
 			[]),
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$html$Html$text('Error')
+				_elm_lang$html$Html$text(str)
+			]));
+};
+var _ManuScriptHub$elm_pagescroll$Pane$step1 = A3(
+	_ManuScriptHub$elm_pagescroll$Rows$Rows,
+	_elm_lang$core$Native_List.fromArray(
+		[]),
+	A3(
+		_ManuScriptHub$elm_pagescroll$Rows$Cols,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_ManuScriptHub$elm_pagescroll$Pane$fromText('center'),
+		_elm_lang$core$Native_List.fromArray(
+			[])),
+	_elm_lang$core$Native_List.fromArray(
+		[]));
+var _ManuScriptHub$elm_pagescroll$Pane$step2 = A3(
+	_ManuScriptHub$elm_pagescroll$Rows$Rows,
+	_elm_lang$core$Native_List.fromArray(
+		[]),
+	A3(
+		_ManuScriptHub$elm_pagescroll$Rows$Cols,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_ManuScriptHub$elm_pagescroll$Pane$fromText('center'),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_ManuScriptHub$elm_pagescroll$Pane$fromText('col-rightof-center')
 			])),
-	pos: _ManuScriptHub$elm_pagescroll$OnePageScroll$defaultPos
-};
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$origin = A2(_elm_community$elm_linear_algebra$Math_Vector2$vec2, 0, 0);
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$scrollStyle = function (model) {
-	return _elm_lang$html$Html_Attributes$style(
+	_elm_lang$core$Native_List.fromArray(
+		[]));
+var _ManuScriptHub$elm_pagescroll$Pane$step3 = A3(
+	_ManuScriptHub$elm_pagescroll$Rows$Rows,
+	_elm_lang$core$Native_List.fromArray(
+		[]),
+	A3(
+		_ManuScriptHub$elm_pagescroll$Rows$Cols,
 		_elm_lang$core$Native_List.fromArray(
 			[
-				A2(
-				F2(
-					function (v0, v1) {
-						return {ctor: '_Tuple2', _0: v0, _1: v1};
-					}),
-				'position',
-				'absolute'),
-				A2(
-				F2(
-					function (v0, v1) {
-						return {ctor: '_Tuple2', _0: v0, _1: v1};
-					}),
-				'width',
-				'920px'),
-				A2(
-				F2(
-					function (v0, v1) {
-						return {ctor: '_Tuple2', _0: v0, _1: v1};
-					}),
-				'left',
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_elm_lang$core$Basics$toString(model.pixelPos.x),
-					'px')),
-				A2(
-				F2(
-					function (v0, v1) {
-						return {ctor: '_Tuple2', _0: v0, _1: v1};
-					}),
-				'top',
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_elm_lang$core$Basics$toString(model.pixelPos.y),
-					'px')),
-				A2(
-				F2(
-					function (v0, v1) {
-						return {ctor: '_Tuple2', _0: v0, _1: v1};
-					}),
-				'border',
-				'solid 1px black'),
-				A2(
-				F2(
-					function (v0, v1) {
-						return {ctor: '_Tuple2', _0: v0, _1: v1};
-					}),
-				'padding-right',
-				'50px'),
-				A2(
-				F2(
-					function (v0, v1) {
-						return {ctor: '_Tuple2', _0: v0, _1: v1};
-					}),
-				'padding-bottom',
-				'50px')
-			]));
-};
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$viewbox = F2(
-	function (x, y) {
-		return _elm_lang$svg$Svg_Attributes$viewBox(
-			A2(
-				_elm_lang$core$String$join,
-				' ',
-				A2(
-					_elm_lang$core$List$map,
-					_elm_lang$core$Basics$toString,
-					_elm_lang$core$Native_List.fromArray(
-						[0, 0, x, y]))));
-	});
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$translate = function (pos) {
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		'translate (',
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			_elm_lang$core$Basics$toString(
-				_elm_community$elm_linear_algebra$Math_Vector2$getX(pos)),
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				',',
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_elm_lang$core$Basics$toString(
-						_elm_community$elm_linear_algebra$Math_Vector2$getY(pos)),
-					')'))));
-};
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$view = function (model) {
-	var _p0 = _ManuScriptHub$elm_pagescroll$Util$toIntTuple(model.windowSize);
-	var x = _p0._0;
-	var y = _p0._1;
-	var sx = _elm_lang$core$Basics$toString((x / 4) | 0);
-	var sy = _elm_lang$core$Basics$toString((y / 2) | 0);
-	var content = A2(
-		_elm_lang$svg$Svg$foreignObject,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$svg$Svg_Attributes$requiredExtensions('http://www.w3.org/1999/xhtml'),
-				_elm_lang$svg$Svg_Attributes$width(sx),
-				_elm_lang$svg$Svg_Attributes$style('stroke-width: 1px; background-color: blue;'),
-				_elm_lang$svg$Svg_Attributes$height(sy),
-				_elm_lang$svg$Svg_Attributes$x('10px'),
-				_elm_lang$svg$Svg_Attributes$y('42px')
+				_ManuScriptHub$elm_pagescroll$Pane$fromText('col-leftof-center')
 			]),
+		_ManuScriptHub$elm_pagescroll$Pane$fromText('center'),
 		_elm_lang$core$Native_List.fromArray(
 			[
-				A2(
-				_elm_lang$html$Html$body,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(
-						_elm_lang$html$Html_Attributes$property,
-						'xmlns',
-						_elm_lang$core$Json_Encode$string('http://www.w3.org/1999/xhtml'))
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(
-						_elm_lang$html$Html$div,
-						_elm_lang$core$Native_List.fromArray(
-							[]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html$text('This is a test')
-							]))
-					]))
-			]));
-	return A2(
-		_elm_lang$svg$Svg$svg,
+				_ManuScriptHub$elm_pagescroll$Pane$fromText('col-rightof-center')
+			])),
+	_elm_lang$core$Native_List.fromArray(
+		[]));
+var _ManuScriptHub$elm_pagescroll$Pane$step4 = A3(
+	_ManuScriptHub$elm_pagescroll$Rows$Rows,
+	_elm_lang$core$Native_List.fromArray(
+		[]),
+	A3(
+		_ManuScriptHub$elm_pagescroll$Rows$Cols,
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$svg$Svg_Attributes$width(sx),
-				_elm_lang$svg$Svg_Attributes$height(sy),
-				A2(_ManuScriptHub$elm_pagescroll$OnePageScroll$viewbox, x, y)
+				_ManuScriptHub$elm_pagescroll$Pane$fromText('col-leftof-center')
 			]),
+		_ManuScriptHub$elm_pagescroll$Pane$fromText('center'),
 		_elm_lang$core$Native_List.fromArray(
 			[
-				A2(
-				_elm_lang$svg$Svg$g,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$svg$Svg_Attributes$width(sx),
-						_elm_lang$svg$Svg_Attributes$height(sy),
-						_elm_lang$svg$Svg_Attributes$transform(
-						_ManuScriptHub$elm_pagescroll$OnePageScroll$translate(
-							_ManuScriptHub$elm_pagescroll$Util$fromIntRecord(model.pixelPos)))
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						content,
-						A2(
-						_elm_lang$svg$Svg$rect,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$svg$Svg_Attributes$x('10'),
-								_elm_lang$svg$Svg_Attributes$y('10'),
-								_elm_lang$svg$Svg_Attributes$width('10'),
-								_elm_lang$svg$Svg_Attributes$height('10'),
-								_elm_lang$svg$Svg_Attributes$fill('red')
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[]))
-					]))
-			]));
-};
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$move = function (model) {
-	var pagePos = A2(
-		_ManuScriptHub$elm_pagescroll$Util$multiplyVec,
-		_ManuScriptHub$elm_pagescroll$Util$fromIntRecord(model.curCell),
-		model.windowSize);
-	var v = _szabba$elm_animations$Animation$sample(model.animation);
-	return _elm_lang$core$Native_Utils.update(
-		model,
-		{
-			pixelPos: {
-				x: _elm_lang$core$Basics$round(
-					_elm_community$elm_linear_algebra$Math_Vector2$getX(pagePos) + _elm_community$elm_linear_algebra$Math_Vector2$getX(v)),
-				y: _elm_lang$core$Basics$round(
-					_elm_community$elm_linear_algebra$Math_Vector2$getY(pagePos) + _elm_community$elm_linear_algebra$Math_Vector2$getY(v))
-			}
-		});
-};
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$sgn = function (dir) {
-	var _p1 = dir;
-	switch (_p1.ctor) {
-		case 'North':
-			return -1;
-		case 'East':
-			return 1;
-		case 'South':
-			return 1;
-		case 'West':
-			return -1;
-		default:
-			return 0;
-	}
-};
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$Position = F2(
-	function (a, b) {
-		return {x: a, y: b};
+				_ManuScriptHub$elm_pagescroll$Pane$fromText('col-rightof-center')
+			])),
+	_elm_lang$core$Native_List.fromArray(
+		[
+			A3(
+			_ManuScriptHub$elm_pagescroll$Rows$Cols,
+			_elm_lang$core$Native_List.fromArray(
+				[]),
+			_ManuScriptHub$elm_pagescroll$Pane$fromText('below-center'),
+			_elm_lang$core$Native_List.fromArray(
+				[]))
+		]));
+var _ManuScriptHub$elm_pagescroll$Pane$step5 = A3(
+	_ManuScriptHub$elm_pagescroll$Rows$Rows,
+	_elm_lang$core$Native_List.fromArray(
+		[
+			A3(
+			_ManuScriptHub$elm_pagescroll$Rows$Cols,
+			_elm_lang$core$Native_List.fromArray(
+				[]),
+			_ManuScriptHub$elm_pagescroll$Pane$fromText('above-center'),
+			_elm_lang$core$Native_List.fromArray(
+				[]))
+		]),
+	A3(
+		_ManuScriptHub$elm_pagescroll$Rows$Cols,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_ManuScriptHub$elm_pagescroll$Pane$fromText('col-leftof-center')
+			]),
+		_ManuScriptHub$elm_pagescroll$Pane$fromText('center'),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_ManuScriptHub$elm_pagescroll$Pane$fromText('col-rightof-center')
+			])),
+	_elm_lang$core$Native_List.fromArray(
+		[
+			A3(
+			_ManuScriptHub$elm_pagescroll$Rows$Cols,
+			_elm_lang$core$Native_List.fromArray(
+				[]),
+			_ManuScriptHub$elm_pagescroll$Pane$fromText('below-center'),
+			_elm_lang$core$Native_List.fromArray(
+				[]))
+		]));
+var _ManuScriptHub$elm_pagescroll$Pane$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {animation: a, rows: b, windowSize: c, keyboardModel: d, curDir: e, curPage: f, msg: g};
 	});
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$Cell = F2(
-	function (a, b) {
-		return {html: a, pos: b};
-	});
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$Model = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {cells: a, curCell: b, nextCell: c, animation: d, dir: e, pixelPos: f, windowSize: g, keyboardModel: h};
-	});
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$UpDown = {ctor: 'UpDown'};
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$LeftRight = {ctor: 'LeftRight'};
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$Scroll = function (a) {
+var _ManuScriptHub$elm_pagescroll$Pane$Scroll = function (a) {
 	return {ctor: 'Scroll', _0: a};
 };
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$view$ = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_ManuScriptHub$elm_pagescroll$OnePageScroll$scrollStyle(model),
-				_elm_lang$html$Html_Events$onClick(
-				_ManuScriptHub$elm_pagescroll$OnePageScroll$Scroll(_ohanhi$keyboard_extra$Keyboard_Extra$North))
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$style(
-						_elm_lang$core$Native_List.fromArray(
-							[
-								A2(
-								F2(
-									function (v0, v1) {
-										return {ctor: '_Tuple2', _0: v0, _1: v1};
-									}),
-								'visibility',
-								'visible')
-							]))
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text('This is a test')
-					]))
-			]));
-};
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$KeyboardMsg = function (a) {
+var _ManuScriptHub$elm_pagescroll$Pane$KeyboardMsg = function (a) {
 	return {ctor: 'KeyboardMsg', _0: a};
 };
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$update = F2(
+var _ManuScriptHub$elm_pagescroll$Pane$update = F2(
 	function (msg, model) {
-		var _p2 = msg;
-		switch (_p2.ctor) {
+		var _p8 = msg;
+		switch (_p8.ctor) {
 			case 'NoOp':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			case 'Animate':
-				var moved = _ManuScriptHub$elm_pagescroll$OnePageScroll$move(model);
-				var animated = _elm_lang$core$Native_Utils.update(
-					moved,
-					{
-						animation: A2(_szabba$elm_animations$Animation$run, _p2._0, moved.animation)
-					});
-				var _p3 = _szabba$elm_animations$Animation$isDone(animated.animation);
-				if (_p3 === true) {
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							animated,
-							{
-								curCell: A2(_elm_lang$core$Maybe$withDefault, _ManuScriptHub$elm_pagescroll$OnePageScroll$defaultPos, animated.nextCell),
-								nextCell: _elm_lang$core$Maybe$Nothing
-							}),
-						_elm_lang$core$Native_List.fromArray(
-							[]));
-				} else {
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						animated,
-						_elm_lang$core$Native_List.fromArray(
-							[]));
-				}
-			case 'WindowMsg':
-				var _p4 = _p2._0;
-				var pos = _elm_lang$core$Native_Utils.eq(model.windowSize, _ManuScriptHub$elm_pagescroll$OnePageScroll$origin) ? _ManuScriptHub$elm_pagescroll$OnePageScroll$defaultPos : model.pixelPos;
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						model,
-						{
-							windowSize: _ManuScriptHub$elm_pagescroll$Util$fromIntTuple(
-								{ctor: '_Tuple2', _0: _p4.width, _1: _p4.height}),
-							pixelPos: pos
-						}),
+					model,
 					_elm_lang$core$Native_List.fromArray(
 						[]));
 			case 'KeyboardMsg':
-				var _p5 = A2(_ohanhi$keyboard_extra$Keyboard_Extra$update, _p2._0, model.keyboardModel);
-				var keyboardModel = _p5._0;
-				var keyboardCmd = _p5._1;
-				var dir = _ohanhi$keyboard_extra$Keyboard_Extra$arrowsDirection(keyboardModel);
-				var _p6 = A2(
-					_ManuScriptHub$elm_pagescroll$OnePageScroll$update,
-					_ManuScriptHub$elm_pagescroll$OnePageScroll$Scroll(dir),
+				var _p9 = A2(_ohanhi$keyboard_extra$Keyboard_Extra$update, _p8._0, model.keyboardModel);
+				var keyboardModel = _p9._0;
+				var keyboardCmd = _p9._1;
+				var dir = _ManuScriptHub$elm_pagescroll$KeyboardHelpers$directionToTuple(
+					_ohanhi$keyboard_extra$Keyboard_Extra$arrowsDirection(keyboardModel));
+				var _p10 = A2(
+					_ManuScriptHub$elm_pagescroll$Pane$update,
+					_ManuScriptHub$elm_pagescroll$Pane$Scroll(dir),
 					_elm_lang$core$Native_Utils.update(
 						model,
-						{keyboardModel: keyboardModel}));
-				var model$ = _p6._0;
-				var cmd = _p6._1;
+						{
+							keyboardModel: keyboardModel,
+							msg: _elm_lang$core$Basics$toString(dir)
+						}));
+				var model$ = _p10._0;
+				var cmd = _p10._1;
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					model$,
 					_elm_lang$core$Native_List.fromArray(
 						[
-							A2(_elm_lang$core$Platform_Cmd$map, _ManuScriptHub$elm_pagescroll$OnePageScroll$KeyboardMsg, keyboardCmd),
+							A2(_elm_lang$core$Platform_Cmd$map, _ManuScriptHub$elm_pagescroll$Pane$KeyboardMsg, keyboardCmd),
 							cmd
 						]));
+			case 'Scroll':
+				var dir = _ManuScriptHub$elm_pagescroll$Pane$oppositeOf(dir);
+				return (_elm_lang$core$Native_Utils.eq(
+					dir,
+					{ctor: '_Tuple2', _0: 0, _1: 0}) || _elm_lang$core$Basics$not(
+					_szabba$elm_animations$Animation$isDone(model.animation))) ? A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					_elm_lang$core$Native_List.fromArray(
+						[])) : (_elm_lang$core$Basics$not(
+					A2(_ManuScriptHub$elm_pagescroll$Rows$canShift, model.rows, dir)) ? A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							msg: A2(
+								_elm_lang$core$Basics_ops['++'],
+								'cannot shift to ',
+								_elm_lang$core$Basics$toString(dir))
+						}),
+					_elm_lang$core$Native_List.fromArray(
+						[])) : A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							animation: _ManuScriptHub$elm_pagescroll$Pane$scrollAnimation,
+							curDir: dir,
+							msg: A2(
+								_elm_lang$core$Basics_ops['++'],
+								'from page: ',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									_elm_lang$core$Basics$toString(model.curPage),
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										' animating to ',
+										_elm_lang$core$Basics$toString(dir))))
+						}),
+					_elm_lang$core$Native_List.fromArray(
+						[])));
+			case 'MouseOver':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					_elm_lang$core$Native_List.fromArray(
+						[]));
+			case 'OnSizeChanged':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{windowSize: _p8._0}),
+					_elm_lang$core$Native_List.fromArray(
+						[]));
 			default:
-				var _p7 = _p2._0;
-				if (_elm_lang$core$Native_Utils.eq(_p7, _ohanhi$keyboard_extra$Keyboard_Extra$NoDirection) || _elm_lang$core$Native_Utils.eq(_p7, model.dir)) {
+				var animated = A2(_szabba$elm_animations$Animation$run, _p8._0, model.animation);
+				var _p11 = _szabba$elm_animations$Animation$isDone(animated);
+				if (_p11 === false) {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						model,
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{animation: animated}),
 						_elm_lang$core$Native_List.fromArray(
 							[]));
 				} else {
-					if (_elm_lang$core$Basics$not(
-						_szabba$elm_animations$Animation$isDone(model.animation))) {
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
+					var curPage = A2(
+						_ManuScriptHub$elm_pagescroll$Pane$add,
+						model.curPage,
+						_ManuScriptHub$elm_pagescroll$Pane$oppositeOf(model.curDir));
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
 							model,
-							_elm_lang$core$Native_List.fromArray(
-								[]));
-					} else {
-						var dirVec = _ManuScriptHub$elm_pagescroll$Util$fromIntTuple(
-							_ManuScriptHub$elm_pagescroll$KeyboardHelpers$directionToTuple(_p7));
-						var tDir = A2(
-							_elm_community$elm_linear_algebra$Math_Vector2$add,
-							_ManuScriptHub$elm_pagescroll$Util$fromIntRecord(model.curCell),
-							dirVec);
-						var animation = A2(
-							_szabba$elm_animations$Animation$map,
-							function (t) {
-								return A2(
-									_elm_community$elm_linear_algebra$Math_Vector2$scale,
-									t,
-									A2(_ManuScriptHub$elm_pagescroll$Util$multiplyVec, dirVec, model.windowSize));
-							},
-							A2(
-								_szabba$elm_animations$Animation$map,
-								_elm_community$easing_functions$Ease$outQuint,
-								_szabba$elm_animations$Animation$interval(
-									A2(
-										F2(
-											function (x, y) {
-												return x * y;
-											}),
-										_elm_lang$core$Time$second,
-										0.6))));
-						return A2(
-							_elm_lang$core$Platform_Cmd_ops['!'],
-							_elm_lang$core$Native_Utils.update(
-								model,
-								{
-									dir: _p7,
-									animation: animation,
-									nextCell: _elm_lang$core$Maybe$Just(
-										_ManuScriptHub$elm_pagescroll$Util$toIntRecord(tDir))
-								}),
-							_elm_lang$core$Native_List.fromArray(
-								[]));
-					}
+							{
+								animation: _szabba$elm_animations$Animation$immediately(_ManuScriptHub$elm_pagescroll$Pane$zeroState),
+								rows: A2(_ManuScriptHub$elm_pagescroll$Rows$shift, model.rows, model.curDir),
+								curPage: curPage,
+								curDir: {ctor: '_Tuple2', _0: 0, _1: 0},
+								msg: A2(
+									_elm_lang$core$Basics_ops['++'],
+									'set page to ',
+									_elm_lang$core$Basics$toString(curPage))
+							}),
+						_elm_lang$core$Native_List.fromArray(
+							[]));
 				}
 		}
 	});
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$Animate = function (a) {
-	return {ctor: 'Animate', _0: a};
+var _ManuScriptHub$elm_pagescroll$Pane$OnSizeChanged = function (a) {
+	return {ctor: 'OnSizeChanged', _0: a};
 };
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$WindowMsg = function (a) {
-	return {ctor: 'WindowMsg', _0: a};
-};
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$sizeToMsg = function (s) {
-	return _ManuScriptHub$elm_pagescroll$OnePageScroll$WindowMsg(s);
-};
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$batch(
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(_elm_lang$core$Platform_Sub$map, _ManuScriptHub$elm_pagescroll$OnePageScroll$KeyboardMsg, _ohanhi$keyboard_extra$Keyboard_Extra$subscriptions),
-				_elm_lang$window$Window$resizes(_ManuScriptHub$elm_pagescroll$OnePageScroll$sizeToMsg),
-				_szabba$elm_animations$Animation$isDone(model.animation) ? _elm_lang$core$Platform_Sub$none : _elm_lang$animation_frame$AnimationFrame$diffs(_ManuScriptHub$elm_pagescroll$OnePageScroll$Animate)
-			]));
-};
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$NoOp = {ctor: 'NoOp'};
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$init = function (pages) {
-	var _p8 = _ohanhi$keyboard_extra$Keyboard_Extra$init;
-	var keyboardModel = _p8._0;
-	var keyboardCmd = _p8._1;
+var _ManuScriptHub$elm_pagescroll$Pane$init = function (size) {
+	var _p12 = _ohanhi$keyboard_extra$Keyboard_Extra$init;
+	var keyboardModel = _p12._0;
+	var keyboardCmd = _p12._1;
 	return A2(
 		_elm_lang$core$Platform_Cmd_ops['!'],
 		{
-			cells: _elm_lang$core$Dict$empty,
-			curCell: _ManuScriptHub$elm_pagescroll$OnePageScroll$defaultPos,
-			nextCell: _elm_lang$core$Maybe$Nothing,
-			animation: _szabba$elm_animations$Animation$immediately(_ManuScriptHub$elm_pagescroll$OnePageScroll$origin),
-			dir: _ohanhi$keyboard_extra$Keyboard_Extra$NoDirection,
-			pixelPos: _ManuScriptHub$elm_pagescroll$OnePageScroll$defaultPos,
+			windowSize: size,
+			rows: _ManuScriptHub$elm_pagescroll$Pane$step3,
+			animation: _szabba$elm_animations$Animation$immediately(_ManuScriptHub$elm_pagescroll$Pane$zeroState),
 			keyboardModel: keyboardModel,
-			windowSize: _ManuScriptHub$elm_pagescroll$OnePageScroll$origin
+			curDir: {ctor: '_Tuple2', _0: 0, _1: 0},
+			curPage: {ctor: '_Tuple2', _0: 0, _1: 0},
+			msg: ''
 		},
 		_elm_lang$core$Native_List.fromArray(
 			[
-				A2(_elm_lang$core$Platform_Cmd$map, _ManuScriptHub$elm_pagescroll$OnePageScroll$KeyboardMsg, keyboardCmd),
-				A3(
-				_elm_lang$core$Task$perform,
-				function (_p9) {
-					return _ManuScriptHub$elm_pagescroll$OnePageScroll$NoOp;
+				A2(_elm_lang$core$Platform_Cmd$map, _ManuScriptHub$elm_pagescroll$Pane$KeyboardMsg, keyboardCmd),
+				A2(
+				_NoRedInk$elm_task_extra$Task_Extra$performFailproof,
+				function (s) {
+					return _ManuScriptHub$elm_pagescroll$Pane$OnSizeChanged(s);
 				},
-				_ManuScriptHub$elm_pagescroll$OnePageScroll$sizeToMsg,
 				_elm_lang$window$Window$size)
 			]));
 };
-var _ManuScriptHub$elm_pagescroll$OnePageScroll$main = {
+var _ManuScriptHub$elm_pagescroll$Pane$Animate = function (a) {
+	return {ctor: 'Animate', _0: a};
+};
+var _ManuScriptHub$elm_pagescroll$Pane$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$batch(
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(_elm_lang$core$Platform_Sub$map, _ManuScriptHub$elm_pagescroll$Pane$KeyboardMsg, _ohanhi$keyboard_extra$Keyboard_Extra$subscriptions),
+				_elm_lang$window$Window$resizes(
+				function (size) {
+					return _ManuScriptHub$elm_pagescroll$Pane$OnSizeChanged(size);
+				}),
+				_szabba$elm_animations$Animation$isDone(model.animation) ? _elm_lang$core$Platform_Sub$none : _elm_lang$animation_frame$AnimationFrame$diffs(_ManuScriptHub$elm_pagescroll$Pane$Animate)
+			]));
+};
+var _ManuScriptHub$elm_pagescroll$Pane$NoOp = {ctor: 'NoOp'};
+var _ManuScriptHub$elm_pagescroll$Pane$cellSvg = F3(
+	function (size, cell, off) {
+		return A2(
+			_elm_lang$html$Html_App$map,
+			function (_p13) {
+				return _ManuScriptHub$elm_pagescroll$Pane$NoOp;
+			},
+			A2(
+				_elm_lang$svg$Svg$g,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_ManuScriptHub$elm_pagescroll$Util$offset(off)
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$svg$Svg$rect,
+						A2(_ManuScriptHub$elm_pagescroll$Pane$defaultRect, size, 'stroke:green;line-style:dashed;fill:none'),
+						_elm_lang$core$Native_List.fromArray(
+							[])),
+						A2(
+						_elm_lang$svg$Svg$foreignObject,
+						A2(_ManuScriptHub$elm_pagescroll$Pane$defaultRect, size, 'fill:red'),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								A2(
+								_elm_lang$html$Html$body,
+								_elm_lang$core$Native_List.fromArray(
+									[]),
+								_elm_lang$core$Native_List.fromArray(
+									[cell]))
+							]))
+					])));
+	});
+var _ManuScriptHub$elm_pagescroll$Pane$viewCell = F4(
+	function (model, colCount, idx, cell) {
+		var size = _ManuScriptHub$elm_pagescroll$Pane$cellSize(model);
+		var colOff = {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Basics$toFloat(((0 - colCount) + idx) * size.width),
+			_1: 0
+		};
+		return A3(_ManuScriptHub$elm_pagescroll$Pane$cellSvg, size, cell, colOff);
+	});
+var _ManuScriptHub$elm_pagescroll$Pane$view = function (m) {
+	var maxCols = A2(
+		_elm_lang$core$Debug$log,
+		'max',
+		_ManuScriptHub$elm_pagescroll$Rows$maxCols(m.rows));
+	var size = _ManuScriptHub$elm_pagescroll$Pane$cellSize(m);
+	var _p14 = m.rows;
+	var top = _p14._0;
+	var mid = _p14._1;
+	var bot = _p14._2;
+	var _p15 = mid;
+	var left = _p15._0;
+	var center = _p15._1;
+	var right = _p15._2;
+	var midCols = A2(
+		_elm_lang$core$Basics_ops['++'],
+		left,
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Native_List.fromArray(
+				[center]),
+			right));
+	var allRows = A2(
+		_elm_lang$core$Basics_ops['++'],
+		top,
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Native_List.fromArray(
+				[mid]),
+			bot));
+	var centerAdj = {
+		ctor: '_Tuple2',
+		_0: _elm_lang$core$Basics$toFloat(
+			_elm_lang$core$List$length(left) * size.width),
+		_1: _elm_lang$core$Basics$toFloat(
+			_elm_lang$core$List$length(top) * size.height)
+	};
+	var totOff = A2(
+		_ManuScriptHub$elm_pagescroll$Pane$add,
+		centerAdj,
+		_ManuScriptHub$elm_pagescroll$Pane$pageOffset(m));
+	var _p16 = _ManuScriptHub$elm_pagescroll$Pane$windowSize(m);
+	var width = _p16.width;
+	var height = _p16.height;
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$svg$Svg$svg,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$svg$Svg_Attributes$width(
+						_elm_lang$core$Basics$toString(width)),
+						_elm_lang$svg$Svg_Attributes$height(
+						_elm_lang$core$Basics$toString(height)),
+						_elm_lang$svg$Svg_Attributes$viewBox(
+						_ManuScriptHub$elm_pagescroll$Util$viewBox(
+							_ManuScriptHub$elm_pagescroll$Pane$windowSize(m))),
+						_elm_lang$svg$Svg_Attributes$style('border: 1px solid #cccccc;')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$svg$Svg$g,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_ManuScriptHub$elm_pagescroll$Util$offset(centerAdj)
+							]),
+						A2(
+							_elm_lang$core$List$indexedMap,
+							A2(
+								_ManuScriptHub$elm_pagescroll$Pane$viewCell,
+								m,
+								_elm_lang$core$List$length(midCols)),
+							midCols)),
+						A2(
+						_elm_lang$svg$Svg$circle,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$svg$Svg_Attributes$cx('0'),
+								_elm_lang$svg$Svg_Attributes$cy('0'),
+								_elm_lang$svg$Svg_Attributes$r('3'),
+								_elm_lang$svg$Svg_Attributes$fill('green')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[]))
+					])),
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text(m.msg)
+					]))
+			]));
+};
+var _ManuScriptHub$elm_pagescroll$Pane$main = {
 	main: _elm_lang$html$Html_App$program(
 		{
-			init: _ManuScriptHub$elm_pagescroll$OnePageScroll$init(
-				_elm_lang$core$Native_List.fromArray(
-					[])),
-			view: _ManuScriptHub$elm_pagescroll$OnePageScroll$view,
-			update: _ManuScriptHub$elm_pagescroll$OnePageScroll$update,
-			subscriptions: _ManuScriptHub$elm_pagescroll$OnePageScroll$subscriptions
+			init: _ManuScriptHub$elm_pagescroll$Pane$init(
+				{width: 0, height: 0}),
+			subscriptions: _ManuScriptHub$elm_pagescroll$Pane$subscriptions,
+			update: _ManuScriptHub$elm_pagescroll$Pane$update,
+			view: _ManuScriptHub$elm_pagescroll$Pane$view
 		})
 };
+var _ManuScriptHub$elm_pagescroll$Pane$viewCol = F4(
+	function (model, rowCount, idx, _p17) {
+		var _p18 = _p17;
+		var _p19 = _p18._0;
+		var size = _ManuScriptHub$elm_pagescroll$Pane$cellSize(model);
+		var rowOffset = {
+			ctor: '_Tuple2',
+			_0: (0 - size.width) * _elm_lang$core$List$length(_p19),
+			_1: ((0 - rowCount) + idx) * size.height
+		};
+		var all = A2(
+			_elm_lang$core$Basics_ops['++'],
+			_p19,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Native_List.fromArray(
+					[_p18._1]),
+				_p18._2));
+		return A2(
+			_elm_lang$svg$Svg$g,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_ManuScriptHub$elm_pagescroll$Util$offset(rowOffset)
+				]),
+			A2(
+				_elm_lang$core$List$indexedMap,
+				A2(
+					_ManuScriptHub$elm_pagescroll$Pane$viewCell,
+					model,
+					_elm_lang$core$List$length(all)),
+				all));
+	});
+var _ManuScriptHub$elm_pagescroll$Pane$MouseOver = {ctor: 'MouseOver'};
 var Elm = {};
-Elm['OnePageScroll'] = Elm['OnePageScroll'] || {};
-_elm_lang$core$Native_Platform.addPublicModule(Elm['OnePageScroll'], 'OnePageScroll', typeof _ManuScriptHub$elm_pagescroll$OnePageScroll$main === 'undefined' ? null : _ManuScriptHub$elm_pagescroll$OnePageScroll$main);
+Elm['Pane'] = Elm['Pane'] || {};
+_elm_lang$core$Native_Platform.addPublicModule(Elm['Pane'], 'Pane', typeof _ManuScriptHub$elm_pagescroll$Pane$main === 'undefined' ? null : _ManuScriptHub$elm_pagescroll$Pane$main);
 
 if (typeof define === "function" && define['amd'])
 {
@@ -10193,4 +10155,4 @@ for (var publicModule in Elm)
 }
 
 }).call(this);
-</script></head><body><script type="text/javascript">Elm.OnePageScroll.fullscreen()</script></body></html>
+</script></head><body><script type="text/javascript">Elm.Pane.fullscreen()</script></body></html>

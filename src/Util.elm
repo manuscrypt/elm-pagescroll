@@ -4,6 +4,9 @@ import Math.Vector2 exposing (Vec2, vec2, getX, getY, fromTuple)
 import Array exposing (get, set, Array)
 import String
 
+import Svg exposing (Svg)
+import Svg.Attributes as SA
+
 
 noFx : a -> ( a, Cmd b )
 noFx m =
@@ -72,3 +75,8 @@ multiplyVec v1 v2 =
 viewBox : { a | height : Int, width : Int } -> String
 viewBox { width, height } =
     String.join " " <| List.map toString [ -width // 2, -height // 2, width, height ]
+
+offset : ( number, number ) -> Svg.Attribute b
+offset ( x, y ) =
+    SA.transform <| "translate (" ++ (toString x) ++ "," ++ (toString y) ++ ")"
+    

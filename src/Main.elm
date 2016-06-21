@@ -2,8 +2,8 @@ module Pane exposing (..)
 
 import Svg exposing (Svg)
 import Html exposing (Html)
-import Svg.Attributes as SA
 import Html.App as App
+import Svg.Attributes as SA
 import VirtualDom
 import Animation exposing (Animation)
 import AnimationFrame
@@ -15,25 +15,11 @@ import Ease exposing (outQuint, inOutBack)
 import KeyboardHelpers exposing (directionToTuple)
 import Util exposing (..)
 
-
-type alias Cell a =
-    VirtualDom.Node a
-
-
-type alias Dir =
-    ( Int, Int )
-
+import Rows exposing (Dir, Rows, Cols, Cell)
 
 type alias Page =
     ( Int, Int )
 
-
-type Cols a
-    = Cols (List (Cell a)) (Cell a) (List (Cell a))
-
-
-type Rows a
-    = Rows (List (Cols a)) (Cols a) (List (Cols a))
 
 
 type alias Model a =
@@ -43,6 +29,7 @@ type alias Model a =
     , keyboardModel : Keyboard.Model
     , curDir : Dir
     , curPage : Page
+    , msg: String
     }
 
 
@@ -60,22 +47,30 @@ fromText str =
     Html.div [] [ Html.text str ]
 
 
-content : Rows a
-content =
-    let
-        topRow =
-            Cols [] (fromText "top") []
+step1: Rows a
+step1 = 
+    Rows.Rows [] (Rows.Cols [] (fromText "center") []) []
 
-        centerRow =
-            Cols [] (fromText "This") [ fromText "is", fromText "just", fromText "a", fromText "test" ]
+step2: Rows a
+step2 = 
+    Rows.Rows [] (Rows.Cols [] (fromText "center") [fromText "col-rightof-center"]) []
 
-        botRow1 =
-            Cols [ fromText "bl1", fromText "bl2" ] (fromText "bot") [ fromText "br1" ]
+step3: Rows a
+step3 = 
+    Rows.Rows [] (Rows.Cols [fromText "col-leftof-center"] (fromText "center") [fromText "col-rightof-center"]) []
 
-        botRow2 =
-            Cols [] (fromText "bot") [ fromText "br21", fromText "br22" ]
-    in
-        Rows [ topRow ] centerRow [ botRow1, botRow2 ]
+step4 : Rows a
+step4 = 
+    Rows.Rows [] (Rows.Cols [fromText "col-leftof-center"] (fromText "center") [fromText "col-rightof-center"]) [Rows.Cols [] (fromText "below-center") []]
+
+step5 : Rows a
+step5 = 
+    Rows.Rows [Rows.Cols [] (fromText "above-center") [] ] (Rows.Cols [fromText "col-leftof-center"] (fromText "center") [fromText "col-rightof-center"]) [Rows.Cols [] (fromText "below-center") []]
+
+
+emptyCols : Cols a
+emptyCols =
+    (Rows.Cols [] (Svg.g [] []) [])
 
 
 main : Program Never
@@ -107,24 +102,30 @@ init size =
             Keyboard.init
     in
         { windowSize = size
-        , rows = content
-        , animation = scrollAnimation
+        , rows = step3
+        , animation = Animation.immediately zeroState
         , keyboardModel = keyboardModel
         , curDir = ( 0, 0 )
         , curPage = ( 0, 0 )
+        , msg = ""
         }
             ! [ Cmd.map KeyboardMsg keyboardCmd, Window.size |> Task.performFailproof (\s -> OnSizeChanged s) ]
+
+center: Model a -> Cell a 
+center model = 
+    let (Rows.Rows top (Rows.Cols left center right) bot) = model.rows
+    in center
 
 
 scrollAnimation : Animation (Window.Size -> Dir -> ( Float, Float ))
 scrollAnimation =
-    (1 * Time.second)
+    (0.5 * Time.second)
         |> Animation.interval
         |> Animation.map Ease.inOutBack
         |> Animation.map
             (\t size dir ->
-                ( t * (toFloat <| fst dir) * (toFloat <| size.width)
-                , t * (toFloat <| snd dir) * (toFloat <| size.height)
+                ( -t * (toFloat <| fst dir) * (toFloat <| size.width)
+                , -t * (toFloat <| snd dir) * (toFloat <| size.height)
                 )
             )
 
@@ -145,20 +146,18 @@ update msg model =
                         <| Keyboard.arrowsDirection keyboardModel
 
                 ( model', cmd ) =
-                    update (Scroll dir) { model | keyboardModel = keyboardModel }
+                    update (Scroll dir) { model | keyboardModel = keyboardModel, msg = toString dir }
             in
                 model' ! [ Cmd.map KeyboardMsg keyboardCmd, cmd ]
 
-        Scroll dir ->
-            if (dir == ( 0, 0 )) then
+        Scroll oppDir ->
+            let dir = oppositeOf dir 
+            in if( dir == (0,0) || not (Animation.isDone model.animation)) then
                 model ! []
-            else if not (Animation.isDone model.animation) then
-                if (dir == oppositeOf model.curDir) then
-                    { model | animation = Animation.reverse model.animation, curDir = dir } ! []
-                else
-                    model ! []
+            else if not (Rows.canShift model.rows dir) then
+                { model | msg = "cannot shift to " ++ toString dir} ! []
             else
-                { model | animation = scrollAnimation, curDir = dir } ! []
+                { model | animation = scrollAnimation, curDir = dir, msg = "from page: " ++ (toString model.curPage) ++ " animating to " ++ toString dir } ! []
 
         MouseOver ->
             model ! []
@@ -176,14 +175,19 @@ update msg model =
                         { model | animation = animated } ! []
 
                     True ->
-                        { model
-                            | animation = animated
-                            , rows = shiftCols model
-                            , curPage = add model.curPage model.curDir
+                        let curPage = add model.curPage <| oppositeOf model.curDir
+                        in { model
+                            | animation = Animation.immediately zeroState
+                            , rows = Rows.shift model.rows model.curDir
+                            , curPage = curPage
                             , curDir = ( 0, 0 )
+                            , msg = "set page to " ++ toString curPage
                         }
                             ! []
 
+zeroState : Window.Size -> Dir -> (Float, Float)
+zeroState s d = (0,0)
+    --(\s -> Svg.circle [ SA.cx "0", SA.cy "0", SA.r <| toString s.width ] [])
 
 windowSize : Model a -> Window.Size
 windowSize m =
@@ -199,7 +203,7 @@ cellSize m =
         max =
             min width height
     in
-        { width = max // 4, height = max // 4 }
+        { width = width // 4, height = height // 4 }
 
 
 view : Model a -> Svg Msg
@@ -208,25 +212,41 @@ view m =
         { width, height } =
             windowSize m
 
-        (Rows top cur bot) =
+        (Rows.Rows top mid bot) =
             m.rows
 
+        (Rows.Cols left center right) = mid
+
+        size = cellSize m
+
         allRows =
-            top ++ [ cur ] ++ bot
+            top ++ [ mid ] ++ bot
+        
+        midCols = left ++ [center] ++ right
+
+        maxCols = Debug.log "max" <| Rows.maxCols m.rows
+        
+        centerAdj = ( toFloat <| List.length left * size.width, toFloat <| List.length top * size.height)-- ( -0.5 * (toFloat maxCols) * (toFloat size.width), 0) -- -0.5 * (toFloat size.height) * toFloat (List.length allRows))
+
+        totOff = add centerAdj (pageOffset m) 
+        --totOff =  pageOffset m 
+ --(*) -0.5 <|
     in
-        Svg.svg
-            [ SA.width <| toString width
-            , SA.height <| toString height
-            , SA.viewBox <| viewBox <| windowSize m
-            , SA.style "border: 1px solid #cccccc;"
-            ]
-            [ Svg.g [ offset <| pageOffset m ] (List.indexedMap (viewCol m (List.length allRows)) allRows)
-            , Svg.circle [ SA.cx "0", SA.cy "0", SA.r "3", SA.fill "green" ] []
-            ]
+        Html.div [] [
+        Svg.svg [ SA.width <| toString width
+                , SA.height <| toString height
+                , SA.viewBox <| viewBox <| windowSize m
+                , SA.style "border: 1px solid #cccccc;"
+                ]   [ Svg.g [ offset centerAdj ] (List.indexedMap (viewCell m (List.length midCols)) midCols) 
+                    , Svg.circle [ SA.cx "0", SA.cy "0", SA.r "3", SA.fill "green" ] []
+                    ]
+            , Html.div [] [Html.text m.msg]
+        ]
 
+                --(List.indexedMap (viewCol m (List.length allRows)) allRows ) 
 
-viewCol : Model a -> Int -> Int -> Cols a -> Svg Msg
-viewCol model count idx (Cols left center right) =
+viewCol : Model a -> Int -> Int->Cols a -> Svg Msg
+viewCol model rowCount idx (Rows.Cols left center right) =
     let
         all =
             left ++ [ center ] ++ right
@@ -234,36 +254,43 @@ viewCol model count idx (Cols left center right) =
         size =
             cellSize model
 
-        rowOffset =
-            ( 0, toFloat <| ((-count + 1) // 2 + idx) * size.height )
+        rowOffset = ( -size.width * (List.length left), (-rowCount + idx) * size.height)
     in
-        Svg.g [ offset rowOffset ] <| List.indexedMap (viewCell model (List.length all)) all
-
+        Svg.g [ offset rowOffset ] <| (
+                List.indexedMap (viewCell model (List.length all)) all)
 
 viewCell : Model a -> Int -> Int -> Cell a -> Svg Msg
-viewCell model count idx cell =
+viewCell model colCount idx cell =
     let
         size =
             cellSize model
 
-        colOff =
-            ( toFloat <| (-count // 2 + idx) * size.width, 0 )
+        colOff = (toFloat <| (-colCount + idx) * size.width, 0 )
 
-        animOff =
-            Animation.sample model.animation (cellSize model) model.curDir
+        --animOff = Animation.sample model.animation size model.curDir
+        --totOff = add colOff animOff  
+        --<| add animOff colOff
     in
-        App.map (\_ -> NoOp)
-            <| Svg.g [ offset <| add animOff colOff ]
-                [ Svg.rect (defaultRect size "stroke:green;line-style:dashed;fill:none") []
-                , Svg.foreignObject (defaultRect size "fill:red") [ Html.body [] [ cell ] ]
-                ]
+        cellSvg size cell colOff
 
 
-offset : ( number, number ) -> Svg.Attribute b
-offset ( x, y ) =
-    SA.transform <| "translate (" ++ (toString x) ++ "," ++ (toString y) ++ ")"
+cellSvg size cell off = 
+    App.map (\_ -> NoOp) 
+        <| Svg.g [offset off] [ Svg.rect (defaultRect size "stroke:green;line-style:dashed;fill:none") []
+                    , Svg.foreignObject (defaultRect size "fill:red") [ Html.body [] [ cell ] ]
+                    ]
 
 
+
+-- defaultRect : Window.Size -> String -> List (Svg.Attribute a)
+-- defaultRect size style =
+--     [ SA.x <| toString (size.width // 2)
+--     , SA.y <| toString (size.height // 2)
+--     , SA.width <| toString size.width
+--     , SA.height <| toString size.height
+--     , SA.style style
+--     ]
+    
 defaultRect : Window.Size -> String -> List (Svg.Attribute a)
 defaultRect size style =
     [ SA.x <| toString (-size.width // 2)
@@ -274,14 +301,15 @@ defaultRect size style =
     ]
 
 
+
 pageOffset : Model a -> ( Float, Float )
 pageOffset model =
     let
         size =
             cellSize model
     in
-        ( toFloat <| fst model.curPage * size.width
-        , toFloat <| snd model.curPage * size.height
+        ( toFloat <| fst model.curPage * -size.width
+        , toFloat <| snd model.curPage * -size.height
         )
 
 
@@ -295,63 +323,7 @@ oppositeOf ( x, y ) =
     ( -x, -y )
 
 
-
---SHIFT
-
-
-shiftCols : Model a -> Rows a
-shiftCols model =
-    let
-        (Rows top mid bot) =
-            model.rows
-    in
-        if (fst model.curDir == -1) then
-            Rows top (shiftLeft mid) bot
-        else
-            Rows top (shiftRight mid) bot
-
-
-shiftLeft : Cols a -> Cols a
-shiftLeft (Cols left center right) =
-    if (List.length right == 0) then
-        Cols left center right
-    else
-        let
-            newLeft =
-                left ++ [ center ]
-
-            newCenter =
-                Maybe.withDefault (Svg.g [] []) <| List.head right
-
-            newRight =
-                List.drop 1 right
-        in
-            Cols newLeft newCenter newRight
-
-
-shiftRight : Cols a -> Cols a
-shiftRight (Cols left center right) =
-    if (List.length left == 0) then
-        (Cols left center right)
-    else
-        let
-            newLeft =
-                List.take (-1 + List.length left) left
-
-            newCenter =
-                Maybe.withDefault (Svg.g [] []) <| List.head <| List.reverse left
-
-            newRight =
-                [ center ] ++ right
-        in
-            Cols newLeft newCenter newRight
-
-
-
 -- animation : Animation (Window.Size -> Svg Msg)
--- zeroState : Window.Size -> Svg Msg
--- zeroState =
---     (\s -> Svg.circle [ SA.cx "0", SA.cy "0", SA.r <| toString s.width ] [])
 -- toSvg : Float -> Window.Size -> Svg Msg
 -- toSvg t { width, height } =
 --     Svg.circle
@@ -363,10 +335,3 @@ shiftRight (Cols left center right) =
 --         , SA.strokeWidth "5"
 --         ]
 --         []
--- viewRows : Window.Size->{ rowCount:Int }->Int ->Rows a -> Svg a
--- viewRows size rowCount idx (Rows top mid bot) =
---     let rows = top ++ [mid] ++ bot
---     in Svg.g [] (List.indexedMap (viewCols size { colCount = List.length rows }) rows)
--- viewCell : String  -> Int -> Int -> Html a -> Svg Msg
--- viewCell style size idx cell =
---     Svg.g [ offsetBy (30 * idx), SA.style style ] [ App.map (\s -> NoOp) <| embedHtml size cell ]
