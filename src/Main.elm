@@ -4,7 +4,6 @@ import Svg exposing (Svg)
 import Html exposing (Html)
 import Html.App as App
 import Svg.Attributes as SA
-import VirtualDom
 import Animation exposing (Animation)
 import AnimationFrame
 import Time exposing (Time)
@@ -14,12 +13,11 @@ import Keyboard.Extra as Keyboard exposing (Direction)
 import Ease exposing (outQuint, inOutBack)
 import KeyboardHelpers exposing (directionToTuple)
 import Util exposing (..)
-
 import Rows exposing (Dir, Rows, Cols, Cell)
+
 
 type alias Page =
     ( Int, Int )
-
 
 
 type alias Model a =
@@ -29,7 +27,7 @@ type alias Model a =
     , keyboardModel : Keyboard.Model
     , curDir : Dir
     , curPage : Page
-    , msg: String
+    , msg : String
     }
 
 
@@ -47,25 +45,29 @@ fromText str =
     Html.div [] [ Html.text str ]
 
 
-step1: Rows a
-step1 = 
+step1 : Rows a
+step1 =
     Rows.Rows [] (Rows.Cols [] (fromText "center") []) []
 
-step2: Rows a
-step2 = 
-    Rows.Rows [] (Rows.Cols [] (fromText "center") [fromText "col-rightof-center"]) []
 
-step3: Rows a
-step3 = 
-    Rows.Rows [] (Rows.Cols [fromText "col-leftof-center"] (fromText "center") [fromText "col-rightof-center"]) []
+step2 : Rows a
+step2 =
+    Rows.Rows [] (Rows.Cols [] (fromText "center") [ fromText "col-rightof-center" ]) []
+
+
+step3 : Rows a
+step3 =
+    Rows.Rows [] (Rows.Cols [ fromText "col-leftof-center" ] (fromText "center") [ fromText "col-rightof-center" ]) []
+
 
 step4 : Rows a
-step4 = 
-    Rows.Rows [] (Rows.Cols [fromText "col-leftof-center"] (fromText "center") [fromText "col-rightof-center"]) [Rows.Cols [] (fromText "below-center") []]
+step4 =
+    Rows.Rows [] (Rows.Cols [ fromText "col-leftof-center" ] (fromText "center") [ fromText "col-rightof-center" ]) [ Rows.Cols [] (fromText "below-center") [] ]
+
 
 step5 : Rows a
-step5 = 
-    Rows.Rows [Rows.Cols [] (fromText "above-center") [] ] (Rows.Cols [fromText "col-leftof-center"] (fromText "center") [fromText "col-rightof-center"]) [Rows.Cols [] (fromText "below-center") []]
+step5 =
+    Rows.Rows [ Rows.Cols [] (fromText "above-center") [] ] (Rows.Cols [ fromText "col-leftof-center" ] (fromText "center") [ fromText "col-rightof-center" ]) [ Rows.Cols [] (fromText "below-center") [] ]
 
 
 emptyCols : Cols a
@@ -102,7 +104,7 @@ init size =
             Keyboard.init
     in
         { windowSize = size
-        , rows = step3
+        , rows = step4
         , animation = Animation.immediately zeroState
         , keyboardModel = keyboardModel
         , curDir = ( 0, 0 )
@@ -111,10 +113,14 @@ init size =
         }
             ! [ Cmd.map KeyboardMsg keyboardCmd, Window.size |> Task.performFailproof (\s -> OnSizeChanged s) ]
 
-center: Model a -> Cell a 
-center model = 
-    let (Rows.Rows top (Rows.Cols left center right) bot) = model.rows
-    in center
+
+center : Model a -> Cell a
+center model =
+    let
+        (Rows.Rows top (Rows.Cols left center right) bot) =
+            model.rows
+    in
+        center
 
 
 scrollAnimation : Animation (Window.Size -> Dir -> ( Float, Float ))
@@ -151,10 +157,10 @@ update msg model =
                 model' ! [ Cmd.map KeyboardMsg keyboardCmd, cmd ]
 
         Scroll dir ->
-            if( dir == (0,0) || not (Animation.isDone model.animation)) then
+            if (dir == ( 0, 0 ) || not (Animation.isDone model.animation)) then
                 model ! []
             else if not (Rows.canShift model.rows dir) then
-                { model | msg = "cannot shift to " ++ toString dir} ! []
+                { model | msg = "cannot shift to " ++ toString dir } ! []
             else
                 { model | animation = scrollAnimation, curDir = dir, msg = "from page: " ++ (toString model.curPage) ++ " animating to " ++ toString dir } ! []
 
@@ -174,19 +180,28 @@ update msg model =
                         { model | animation = animated } ! []
 
                     True ->
-                        let curPage = add model.curPage <| oppositeOf model.curDir
-                        in { model
-                            | animation = Animation.immediately zeroState
-                            , rows = Rows.shift model.rows model.curDir
-                            , curPage = curPage
-                            , curDir = ( 0, 0 )
-                            , msg = "set page to " ++ toString curPage
-                        }
-                            ! []
+                        let
+                            curPage =
+                                add model.curPage <| oppositeOf model.curDir
+                        in
+                            { model
+                                | animation = Animation.immediately zeroState
+                                , rows = Rows.shift model.rows model.curDir
+                                , curPage = curPage
+                                , curDir = ( 0, 0 )
+                                , msg = "set page to " ++ toString curPage
+                            }
+                                ! []
 
-zeroState : Window.Size -> Dir -> (Float, Float)
-zeroState s d = (0,0)
-    --(\s -> Svg.circle [ SA.cx "0", SA.cy "0", SA.r <| toString s.width ] [])
+
+zeroState : Window.Size -> Dir -> ( Float, Float )
+zeroState s d =
+    ( 0, 0 )
+
+
+
+--(\s -> Svg.circle [ SA.cx "0", SA.cy "0", SA.r <| toString s.width ] [])
+
 
 windowSize : Model a -> Window.Size
 windowSize m =
@@ -214,49 +229,63 @@ view m =
         (Rows.Rows top mid bot) =
             m.rows
 
-        (Rows.Cols left center right) = mid
+        (Rows.Cols left center right) =
+            mid
 
-        size = cellSize m
+        size =
+            cellSize m
 
         allRows =
             top ++ [ mid ] ++ bot
-        
-        midCols = left ++ [center] ++ right
 
-        maxCols = Debug.log "max" <| Rows.maxCols m.rows
-        
-        centerAdj = ( toFloat <| maxCols * size.width, toFloat <| List.length top * size.height)
+        midCols =
+            left ++ [ center ] ++ right
 
-        totOff = add centerAdj (pageOffset m) 
-        --totOff =  pageOffset m 
- --(*) -0.5 <|
+        maxCols =
+            Debug.log "max" <| Rows.maxCols m.rows
+
+        centerAdj =
+            ( toFloat <| maxCols * size.width, toFloat <| List.length top * size.height )
+
+        totOff =
+            add centerAdj (pageOffset m)
+
+        --totOff =  pageOffset m
+        --(*) -0.5 <|
     in
-        Html.div [] [
-        Svg.svg [ SA.width <| toString width
+        Html.div []
+            [ Svg.svg
+                [ SA.width <| toString width
                 , SA.height <| toString height
                 , SA.viewBox <| viewBox <| windowSize m
                 , SA.style "border: 1px solid #cccccc;"
-                ]   [ Svg.g [ offset centerAdj ] (List.indexedMap (viewCol m (List.length allRows)) allRows ) 
-                    , Svg.circle [ SA.cx "0", SA.cy "0", SA.r "3", SA.fill "green" ] []
-                    ]
-            , Html.div [] [Html.text m.msg]
-        ]
+                ]
+                [ Svg.g [ offset centerAdj ] (List.indexedMap (viewCol m (List.length allRows)) allRows)
+                , Svg.circle [ SA.cx "0", SA.cy "0", SA.r "3", SA.fill "green" ] []
+                ]
+            , Html.div [] [ Html.text m.msg ]
+            ]
 
-                --
 
-viewCol : Model a -> Int -> Int->Cols a -> Svg Msg
+
+--
+
+
+viewCol : Model a -> Int -> Int -> Cols a -> Svg Msg
 viewCol model rowCount idx (Rows.Cols left center right) =
     let
         all =
-            left ++ [ center ] ++ right
+            (List.reverse left) ++ [ center ] ++ right
 
         size =
             cellSize model
 
-        rowOffset = ( -size.width * (List.length left), (-rowCount + idx) * size.height)
+        rowOffset =
+            ( 0, (-rowCount + idx) * size.height )
     in
-        Svg.g [ offset rowOffset ] <| (
-                List.indexedMap (viewCell model (List.length all)) all)
+        Svg.g [ offset rowOffset ]
+            <| (List.indexedMap (viewCell model (List.length all)) all)
+
 
 viewCell : Model a -> Int -> Int -> Cell a -> Svg Msg
 viewCell model colCount idx cell =
@@ -264,20 +293,25 @@ viewCell model colCount idx cell =
         size =
             cellSize model
 
-        colOff = (toFloat <| (-colCount + idx) * size.width, 0 )
+        colOff =
+            ( toFloat <| (-colCount + idx) * size.width, 0 )
 
-        animOff = Animation.sample model.animation size model.curDir
-        --totOff = add colOff animOff  
+        animOff =
+            Animation.sample model.animation size model.curDir
+
+        --totOff = add colOff animOff
         --<| add animOff colOff
     in
         cellSvg size cell (add colOff animOff)
 
 
-cellSvg size cell off = 
-    App.map (\_ -> NoOp) 
-        <| Svg.g [offset off] [ Svg.rect (defaultRect size "stroke:green;line-style:dashed;fill:none") []
-                    , Svg.foreignObject (defaultRect size "fill:red") [ Html.body [] [ cell ] ]
-                    ]
+cellSvg : Window.Size -> Html a -> ( number, number ) -> Html Msg
+cellSvg size cell off =
+    App.map (\_ -> NoOp)
+        <| Svg.g [ offset off ]
+            [ Svg.rect (defaultRect size "stroke:green;line-style:dashed;fill:none") []
+            , Svg.foreignObject (defaultRect size "fill:red") [ Html.body [] [ cell ] ]
+            ]
 
 
 
@@ -289,7 +323,8 @@ cellSvg size cell off =
 --     , SA.height <| toString size.height
 --     , SA.style style
 --     ]
-    
+
+
 defaultRect : Window.Size -> String -> List (Svg.Attribute a)
 defaultRect size style =
     [ SA.x <| toString (-size.width // 2)
@@ -298,7 +333,6 @@ defaultRect size style =
     , SA.height <| toString size.height
     , SA.style style
     ]
-
 
 
 pageOffset : Model a -> ( Float, Float )
@@ -320,6 +354,7 @@ add ( a, b ) ( x, y ) =
 oppositeOf : ( Int, Int ) -> ( Int, Int )
 oppositeOf ( x, y ) =
     ( -x, -y )
+
 
 
 -- animation : Animation (Window.Size -> Svg Msg)
