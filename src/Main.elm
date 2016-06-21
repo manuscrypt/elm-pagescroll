@@ -150,9 +150,8 @@ update msg model =
             in
                 model' ! [ Cmd.map KeyboardMsg keyboardCmd, cmd ]
 
-        Scroll oppDir ->
-            let dir = oppositeOf dir 
-            in if( dir == (0,0) || not (Animation.isDone model.animation)) then
+        Scroll dir ->
+            if( dir == (0,0) || not (Animation.isDone model.animation)) then
                 model ! []
             else if not (Rows.canShift model.rows dir) then
                 { model | msg = "cannot shift to " ++ toString dir} ! []
@@ -226,7 +225,7 @@ view m =
 
         maxCols = Debug.log "max" <| Rows.maxCols m.rows
         
-        centerAdj = ( toFloat <| List.length left * size.width, toFloat <| List.length top * size.height)-- ( -0.5 * (toFloat maxCols) * (toFloat size.width), 0) -- -0.5 * (toFloat size.height) * toFloat (List.length allRows))
+        centerAdj = ( toFloat <| maxCols * size.width, toFloat <| List.length top * size.height)
 
         totOff = add centerAdj (pageOffset m) 
         --totOff =  pageOffset m 
@@ -237,13 +236,13 @@ view m =
                 , SA.height <| toString height
                 , SA.viewBox <| viewBox <| windowSize m
                 , SA.style "border: 1px solid #cccccc;"
-                ]   [ Svg.g [ offset centerAdj ] (List.indexedMap (viewCell m (List.length midCols)) midCols) 
+                ]   [ Svg.g [ offset centerAdj ] (List.indexedMap (viewCol m (List.length allRows)) allRows ) 
                     , Svg.circle [ SA.cx "0", SA.cy "0", SA.r "3", SA.fill "green" ] []
                     ]
             , Html.div [] [Html.text m.msg]
         ]
 
-                --(List.indexedMap (viewCol m (List.length allRows)) allRows ) 
+                --
 
 viewCol : Model a -> Int -> Int->Cols a -> Svg Msg
 viewCol model rowCount idx (Rows.Cols left center right) =
@@ -267,11 +266,11 @@ viewCell model colCount idx cell =
 
         colOff = (toFloat <| (-colCount + idx) * size.width, 0 )
 
-        --animOff = Animation.sample model.animation size model.curDir
+        animOff = Animation.sample model.animation size model.curDir
         --totOff = add colOff animOff  
         --<| add animOff colOff
     in
-        cellSvg size cell colOff
+        cellSvg size cell (add colOff animOff)
 
 
 cellSvg size cell off = 
