@@ -46,25 +46,29 @@ fromText str =
     Html.div [] [ Html.text str ]
 
 
-step1: Rows a
-step1 = 
+step1 : Rows a
+step1 =
     Rows.Rows [] (Rows.Cols [] (fromText "center") []) []
 
-step2: Rows a
-step2 = 
-    Rows.Rows [] (Rows.Cols [] (fromText "center") [fromText "col-rightof-center"]) []
 
-step3: Rows a
-step3 = 
-    Rows.Rows [] (Rows.Cols [fromText "col-leftof-center"] (fromText "center") [fromText "col-rightof-center"]) []
+step2 : Rows a
+step2 =
+    Rows.Rows [] (Rows.Cols [] (fromText "center") [ fromText "col-rightof-center" ]) []
+
+
+step3 : Rows a
+step3 =
+    Rows.Rows [] (Rows.Cols [ fromText "col-leftof-center" ] (fromText "center") [ fromText "col-rightof-center" ]) []
+
 
 step4 : Rows a
-step4 = 
-    Rows.Rows [] (Rows.Cols [fromText "col-leftof-center"] (fromText "center") [fromText "col-rightof-center"]) [Rows.Cols [] (fromText "below-center") []]
+step4 =
+    Rows.Rows [] (Rows.Cols [ fromText "col-leftof-center" ] (fromText "center") [ fromText "col-rightof-center" ]) [ Rows.Cols [] (fromText "below-center") [] ]
+
 
 step5 : Rows a
-step5 = 
-    Rows.Rows [Rows.Cols [] (fromText "above-center") [] ] (Rows.Cols [fromText "col-leftof-center"] (fromText "center") [fromText "col-rightof-center"]) [Rows.Cols [] (fromText "below-center") []]
+step5 =
+    Rows.Rows [ Rows.Cols [] (fromText "above-center") [] ] (Rows.Cols [ fromText "col-leftof-center" ] (fromText "center") [ fromText "col-rightof-center" ]) [ Rows.Cols [] (fromText "below-center") [] ]
 
 
 emptyCols : Cols a
@@ -101,7 +105,7 @@ init size =
             Keyboard.init
     in
         { windowSize = size
-        , rows = step3
+        , rows = step5
         , animation = Animation.immediately zeroState
         , keyboardModel = keyboardModel
         , curDir = ( 0, 0 )
@@ -110,10 +114,14 @@ init size =
         }
             ! [ Cmd.map KeyboardMsg keyboardCmd, Window.size |> Task.performFailproof (\s -> OnSizeChanged s) ]
 
-center: Model a -> Cell a 
-center model = 
-    let (Rows.Rows top (Rows.Cols left center right) bot) = model.rows
-    in center
+
+center : Model a -> Cell a
+center model =
+    let
+        (Rows.Rows top (Rows.Cols left center right) bot) =
+            model.rows
+    in
+        center
 
 
 scrollAnimation : Animation (Window.Size -> Dir -> ( Float, Float ))
