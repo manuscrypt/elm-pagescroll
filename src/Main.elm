@@ -104,7 +104,7 @@ init size =
             Keyboard.init
     in
         { windowSize = size
-        , rows = step4
+        , rows = step5
         , animation = Animation.immediately zeroState
         , keyboardModel = keyboardModel
         , curDir = ( 0, 0 )
@@ -157,12 +157,22 @@ update msg model =
                 model' ! [ Cmd.map KeyboardMsg keyboardCmd, cmd ]
 
         Scroll dir ->
-            if (dir == ( 0, 0 ) || not (Animation.isDone model.animation)) then
+            if not <| Animation.isDone model.animation then
                 model ! []
-            else if not (Rows.canShift model.rows dir) then
-                { model | msg = "cannot shift to " ++ toString dir } ! []
             else
-                { model | animation = scrollAnimation, curDir = dir, msg = "from page: " ++ (toString model.curPage) ++ " animating to " ++ toString dir } ! []
+                let
+                    shiftedRows =
+                        Rows.shift model.rows dir
+                in
+                    if shiftedRows == model.rows then
+                        { model | msg = "cannot shift to " ++ toString dir } ! []
+                    else
+                        { model
+                            | animation = scrollAnimation
+                            , curDir = dir
+                            , msg = "from page: " ++ (toString model.curPage) ++ " animating to " ++ toString dir
+                        }
+                            ! []
 
         MouseOver ->
             model ! []
@@ -182,11 +192,11 @@ update msg model =
                     True ->
                         let
                             curPage =
-                                add model.curPage <| oppositeOf model.curDir
+                                add model.curPage model.curDir
                         in
                             { model
                                 | animation = Animation.immediately zeroState
-                                , rows = Rows.shift model.rows model.curDir
+                                , rows = Rows.shift model.rows model.curDir |> Debug.log "ffs"
                                 , curPage = curPage
                                 , curDir = ( 0, 0 )
                                 , msg = "set page to " ++ toString curPage
@@ -197,10 +207,6 @@ update msg model =
 zeroState : Window.Size -> Dir -> ( Float, Float )
 zeroState s d =
     ( 0, 0 )
-
-
-
---(\s -> Svg.circle [ SA.cx "0", SA.cy "0", SA.r <| toString s.width ] [])
 
 
 windowSize : Model a -> Window.Size
@@ -229,62 +235,47 @@ view m =
         (Rows.Rows top mid bot) =
             m.rows
 
-        (Rows.Cols left center right) =
-            mid
+        allRows =
+            List.reverse top ++ [ mid ] ++ bot
 
         size =
             cellSize m
-
-        allRows =
-            top ++ [ mid ] ++ bot
-
-        midCols =
-            left ++ [ center ] ++ right
-
-        maxCols =
-            Debug.log "max" <| Rows.maxCols m.rows
-
-        centerAdj =
-            ( toFloat <| maxCols * size.width, toFloat <| List.length top * size.height )
-
-        totOff =
-            add centerAdj (pageOffset m)
-
-        --totOff =  pageOffset m
-        --(*) -0.5 <|
     in
-        Html.div []
-            [ Svg.svg
-                [ SA.width <| toString width
-                , SA.height <| toString height
-                , SA.viewBox <| viewBox <| windowSize m
-                , SA.style "border: 1px solid #cccccc;"
+        let
+            rows =
+                (List.indexedMap (viewCol m (List.length top)) allRows)
+        in
+            Html.div []
+                [ Svg.svg
+                    [ SA.width <| toString width
+                    , SA.height <| toString height
+                    , SA.viewBox <| viewBox <| windowSize m
+                    , SA.style "border: 1px solid #cccccc;"
+                    ]
+                    [ Svg.g [] rows
+                    , Svg.circle [ SA.cx "0", SA.cy "0", SA.r "3", SA.fill "green" ] []
+                    ]
+                , Html.div [] [ Html.text m.msg ]
                 ]
-                [ Svg.g [ offset centerAdj ] (List.indexedMap (viewCol m (List.length allRows)) allRows)
-                , Svg.circle [ SA.cx "0", SA.cy "0", SA.r "3", SA.fill "green" ] []
-                ]
-            , Html.div [] [ Html.text m.msg ]
-            ]
-
-
-
---
 
 
 viewCol : Model a -> Int -> Int -> Cols a -> Svg Msg
 viewCol model rowCount idx (Rows.Cols left center right) =
     let
         all =
-            (List.reverse left) ++ [ center ] ++ right
+            List.reverse left ++ [ center ] ++ right
 
         size =
             cellSize model
 
-        rowOffset =
+        off =
             ( 0, (-rowCount + idx) * size.height )
     in
-        Svg.g [ offset rowOffset ]
-            <| (List.indexedMap (viewCell model (List.length all)) all)
+        let
+            cols =
+                List.indexedMap (viewCell model (List.length left)) all
+        in
+            Svg.g [ offset off ] cols
 
 
 viewCell : Model a -> Int -> Int -> Cell a -> Svg Msg
@@ -293,16 +284,13 @@ viewCell model colCount idx cell =
         size =
             cellSize model
 
-        colOff =
-            ( toFloat <| (-colCount + idx) * size.width, 0 )
-
         animOff =
             Animation.sample model.animation size model.curDir
 
-        --totOff = add colOff animOff
-        --<| add animOff colOff
+        off =
+            ( toFloat <| (-colCount + idx) * size.width, 0 )
     in
-        cellSvg size cell (add colOff animOff)
+        cellSvg size cell (add animOff off)
 
 
 cellSvg : Window.Size -> Html a -> ( number, number ) -> Html Msg
@@ -312,17 +300,6 @@ cellSvg size cell off =
             [ Svg.rect (defaultRect size "stroke:green;line-style:dashed;fill:none") []
             , Svg.foreignObject (defaultRect size "fill:red") [ Html.body [] [ cell ] ]
             ]
-
-
-
--- defaultRect : Window.Size -> String -> List (Svg.Attribute a)
--- defaultRect size style =
---     [ SA.x <| toString (size.width // 2)
---     , SA.y <| toString (size.height // 2)
---     , SA.width <| toString size.width
---     , SA.height <| toString size.height
---     , SA.style style
---     ]
 
 
 defaultRect : Window.Size -> String -> List (Svg.Attribute a)
@@ -335,17 +312,6 @@ defaultRect size style =
     ]
 
 
-pageOffset : Model a -> ( Float, Float )
-pageOffset model =
-    let
-        size =
-            cellSize model
-    in
-        ( toFloat <| fst model.curPage * -size.width
-        , toFloat <| snd model.curPage * -size.height
-        )
-
-
 add : ( number, number ) -> ( number, number ) -> ( number, number )
 add ( a, b ) ( x, y ) =
     ( a + x, b + y )
@@ -354,18 +320,3 @@ add ( a, b ) ( x, y ) =
 oppositeOf : ( Int, Int ) -> ( Int, Int )
 oppositeOf ( x, y ) =
     ( -x, -y )
-
-
-
--- animation : Animation (Window.Size -> Svg Msg)
--- toSvg : Float -> Window.Size -> Svg Msg
--- toSvg t { width, height } =
---     Svg.circle
---         [ SA.r <| toString <| 0.3 * t * (toFloat (min width height))
---         , SA.cx "0"
---         , SA.cy "0"
---         , SA.stroke "#000000"
---         , SA.fillOpacity "0"
---         , SA.strokeWidth "5"
---         ]
---         []
