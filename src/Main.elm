@@ -201,7 +201,7 @@ view m =
                 , on "wheel" wx
                 ]
                 [ Svg.g [] <| List.indexedMap (viewCol m (List.length top)) allRows
-                , Svg.circle [ SA.cx "0", SA.cy "0", SA.r "3", SA.fill "green" ] []
+                --, Svg.circle [ SA.cx "0", SA.cy "0", SA.r "3", SA.fill "green" ] []
                 ]
             ]
 
