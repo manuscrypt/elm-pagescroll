@@ -21,7 +21,9 @@
         "elm-lang/svg": "1.0.0 <= v < 2.0.0",
         "elm-lang/virtual-dom": "1.0.2 <= v < 2.0.0",
         "elm-lang/window": "1.0.0 <= v < 2.0.0",
+        "eskimoblood/elm-color-extra": "3.0.3 <= v < 4.0.0",
         "evancz/elm-http": "3.0.1 <= v < 4.0.0",
+        "krisajenkins/formatting": "2.3.0 <= v < 3.0.0",
         "ohanhi/keyboard-extra": "1.1.0 <= v < 2.0.0",
         "szabba/elm-animations": "2.0.0 <= v < 3.0.0"
     },

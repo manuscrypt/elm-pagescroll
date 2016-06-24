@@ -3,8 +3,7 @@ module Rows exposing (..)
 import VirtualDom
 
 
-type alias Cell a =
-    VirtualDom.Node a
+type alias Cell a = VirtualDom.Node a
 
 
 type Cols a
@@ -16,11 +15,11 @@ type Rows a
 
 
 type alias Dir =
-    ( Int, Int )
+    ( Float, Float )
 
 
 
---SHIFT
+--SHIFT 
 
 
 shift : Rows a -> Dir -> Rows a
@@ -30,13 +29,13 @@ shift (Rows top mid bot) dir =
             Rows top (shiftLeft mid) bot
 
         ( 1, 0 ) ->
-            Rows top (shiftRight mid |> Debug.log "post righty") bot
+            Rows top (shiftRight mid) bot
 
         ( 0, 1 ) ->
-            shiftDown (Rows top mid bot)
+            shiftUp (Rows top mid bot)
 
         ( 0, -1 ) ->
-            shiftUp (Rows top mid bot)
+            shiftDown (Rows top mid bot)
 
         ( _, _ ) ->
             (Rows top mid bot)
@@ -74,7 +73,7 @@ shiftLeft (Cols left center right) =
 
 shiftRight : Cols a -> Cols a
 shiftRight (Cols left center right) =
-    case right |> Debug.log "RIGHTY" of
+    case right of
         [] ->
             Cols left center right
 

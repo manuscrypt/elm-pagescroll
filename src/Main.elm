@@ -1,7 +1,9 @@
-module Pane exposing (..)
+module Main exposing (..)
 
 import Svg exposing (Svg)
+import VirtualDom exposing (on, Property)
 import Html exposing (Html)
+import Html.Attributes as HA
 import Html.App as App
 import Svg.Attributes as SA
 import Animation exposing (Animation)
@@ -14,20 +16,17 @@ import Ease exposing (outQuint, inOutBack)
 import KeyboardHelpers exposing (directionToTuple)
 import Util exposing (..)
 import Rows exposing (Dir, Rows, Cols, Cell)
-
-
-type alias Page =
-    ( Int, Int )
+import Original
+import Json.Decode as Json exposing ((:=))
 
 
 type alias Model a =
-    { animation : Animation (Window.Size -> Dir -> ( Float, Float ))
+    { animation : Animation ({ width : Float, height : Float } -> Dir -> ( Float, Float ))
     , rows : Rows a
+    , scale : Float
     , windowSize : Window.Size
     , keyboardModel : Keyboard.Model
     , curDir : Dir
-    , curPage : Page
-    , msg : String
     }
 
 
@@ -38,47 +37,13 @@ type Msg
     | OnSizeChanged Window.Size
     | KeyboardMsg Keyboard.Msg
     | Scroll Dir
-
-
-fromText : String -> Cell a
-fromText str =
-    Html.div [] [ Html.text str ]
-
-
-step1 : Rows a
-step1 =
-    Rows.Rows [] (Rows.Cols [] (fromText "center") []) []
-
-
-step2 : Rows a
-step2 =
-    Rows.Rows [] (Rows.Cols [] (fromText "center") [ fromText "col-rightof-center" ]) []
-
-
-step3 : Rows a
-step3 =
-    Rows.Rows [] (Rows.Cols [ fromText "col-leftof-center" ] (fromText "center") [ fromText "col-rightof-center" ]) []
-
-
-step4 : Rows a
-step4 =
-    Rows.Rows [] (Rows.Cols [ fromText "col-leftof-center" ] (fromText "center") [ fromText "col-rightof-center" ]) [ Rows.Cols [] (fromText "below-center") [] ]
-
-
-step5 : Rows a
-step5 =
-    Rows.Rows [ Rows.Cols [] (fromText "above-center") [] ] (Rows.Cols [ fromText "col-leftof-center" ] (fromText "center") [ fromText "col-rightof-center" ]) [ Rows.Cols [] (fromText "below-center") [] ]
-
-
-emptyCols : Cols a
-emptyCols =
-    (Rows.Cols [] (Svg.g [] []) [])
+    | Wheel ( Float, Float )
 
 
 main : Program Never
 main =
     App.program
-        { init = init { width = 0, height = 0 }
+        { init = init Original.pages 1
         , subscriptions = subscriptions
         , update = update
         , view = view
@@ -97,41 +62,31 @@ subscriptions model =
         ]
 
 
-init : Window.Size -> ( Model a, Cmd Msg )
-init size =
+init : Rows a -> Float -> ( Model a, Cmd Msg )
+init content scale =
     let
         ( keyboardModel, keyboardCmd ) =
             Keyboard.init
     in
-        { windowSize = size
-        , rows = step5
+        { windowSize = { width = 0, height = 0 }
+        , rows = content
+        , scale = scale
         , animation = Animation.immediately zeroState
         , keyboardModel = keyboardModel
         , curDir = ( 0, 0 )
-        , curPage = ( 0, 0 )
-        , msg = ""
         }
             ! [ Cmd.map KeyboardMsg keyboardCmd, Window.size |> Task.performFailproof (\s -> OnSizeChanged s) ]
 
 
-center : Model a -> Cell a
-center model =
-    let
-        (Rows.Rows top (Rows.Cols left center right) bot) =
-            model.rows
-    in
-        center
-
-
-scrollAnimation : Animation (Window.Size -> Dir -> ( Float, Float ))
+scrollAnimation : Animation ({ width : Float, height : Float } -> Dir -> ( Float, Float ))
 scrollAnimation =
-    (0.5 * Time.second)
+    (0.7 * Time.second)
         |> Animation.interval
-        |> Animation.map Ease.inOutBack
+        |> Animation.map Ease.outQuint
         |> Animation.map
             (\t size dir ->
-                ( -t * (toFloat <| fst dir) * (toFloat <| size.width)
-                , -t * (toFloat <| snd dir) * (toFloat <| size.height)
+                ( -t * (fst dir) * size.width
+                , t * (snd dir) * size.height
                 )
             )
 
@@ -141,6 +96,13 @@ update msg model =
     case msg of
         NoOp ->
             model ! []
+
+        Wheel ( xx, yy ) ->
+            let
+                x =
+                    Debug.log "wheel" "s"
+            in
+                model ! []
 
         KeyboardMsg keyMsg ->
             let
@@ -152,7 +114,7 @@ update msg model =
                         <| Keyboard.arrowsDirection keyboardModel
 
                 ( model', cmd ) =
-                    update (Scroll dir) { model | keyboardModel = keyboardModel, msg = toString dir }
+                    update (Scroll dir) { model | keyboardModel = keyboardModel }
             in
                 model' ! [ Cmd.map KeyboardMsg keyboardCmd, cmd ]
 
@@ -165,12 +127,11 @@ update msg model =
                         Rows.shift model.rows dir
                 in
                     if shiftedRows == model.rows then
-                        { model | msg = "cannot shift to " ++ toString dir } ! []
+                        model ! []
                     else
                         { model
                             | animation = scrollAnimation
                             , curDir = dir
-                            , msg = "from page: " ++ (toString model.curPage) ++ " animating to " ++ toString dir
                         }
                             ! []
 
@@ -190,40 +151,31 @@ update msg model =
                         { model | animation = animated } ! []
 
                     True ->
-                        let
-                            curPage =
-                                add model.curPage model.curDir
-                        in
-                            { model
-                                | animation = Animation.immediately zeroState
-                                , rows = Rows.shift model.rows model.curDir |> Debug.log "ffs"
-                                , curPage = curPage
-                                , curDir = ( 0, 0 )
-                                , msg = "set page to " ++ toString curPage
-                            }
-                                ! []
+                        { model
+                            | animation = Animation.immediately zeroState
+                            , rows = Rows.shift model.rows model.curDir
+                            , curDir = ( 0, 0 )
+                        }
+                            ! []
 
 
-zeroState : Window.Size -> Dir -> ( Float, Float )
+zeroState : { width : Float, height : Float } -> Dir -> ( Float, Float )
 zeroState s d =
     ( 0, 0 )
 
 
-windowSize : Model a -> Window.Size
+windowSize : Model a -> { width : Float, height : Float }
 windowSize m =
-    { width = round (0.9 * (toFloat m.windowSize.width)), height = round (0.9 * (toFloat m.windowSize.height)) }
+    { width = m.scale * (toFloat m.windowSize.width), height = m.scale * (toFloat m.windowSize.height) }
 
 
-cellSize : Model a -> Window.Size
+cellSize : Model a -> { width : Float, height : Float }
 cellSize m =
     let
         { width, height } =
             windowSize m
-
-        max =
-            min width height
     in
-        { width = width // 4, height = height // 4 }
+        { width = width, height = height }
 
 
 view : Model a -> Svg Msg
@@ -241,22 +193,22 @@ view m =
         size =
             cellSize m
     in
-        let
-            rows =
-                (List.indexedMap (viewCol m (List.length top)) allRows)
-        in
-            Html.div []
-                [ Svg.svg
-                    [ SA.width <| toString width
-                    , SA.height <| toString height
-                    , SA.viewBox <| viewBox <| windowSize m
-                    , SA.style "border: 1px solid #cccccc;"
-                    ]
-                    [ Svg.g [] rows
-                    , Svg.circle [ SA.cx "0", SA.cy "0", SA.r "3", SA.fill "green" ] []
-                    ]
-                , Html.div [] [ Html.text m.msg ]
+        Html.body [ HA.style [ (,) "overflow" "hidden", (,) "overflow-x" "hidden", (,) "overflow-y" "hidden", (,) "-ms-overflow-style" "none" ] ]
+            [ Svg.svg
+                [ SA.width <| toString width
+                , SA.height <| toString height
+                , SA.viewBox <| viewBox <| windowSize m
+                , on "wheel" wx
                 ]
+                [ Svg.g [] <| List.indexedMap (viewCol m (List.length top)) allRows
+                , Svg.circle [ SA.cx "0", SA.cy "0", SA.r "3", SA.fill "green" ] []
+                ]
+            ]
+
+
+wx : Json.Decoder Msg
+wx =
+    Json.map Wheel <| Json.tuple2 (,) Json.float Json.float
 
 
 viewCol : Model a -> Int -> Int -> Cols a -> Svg Msg
@@ -269,7 +221,7 @@ viewCol model rowCount idx (Rows.Cols left center right) =
             cellSize model
 
         off =
-            ( 0, (-rowCount + idx) * size.height )
+            ( 0, (toFloat (-rowCount + idx)) * size.height )
     in
         let
             cols =
@@ -282,41 +234,45 @@ viewCell : Model a -> Int -> Int -> Cell a -> Svg Msg
 viewCell model colCount idx cell =
     let
         size =
-            cellSize model
+            cellSize model |> Debug.log "size"
 
         animOff =
             Animation.sample model.animation size model.curDir
 
         off =
-            ( toFloat <| (-colCount + idx) * size.width, 0 )
+            ( (toFloat <| (-colCount + idx)) * size.width, 0 )
     in
         cellSvg size cell (add animOff off)
 
 
-cellSvg : Window.Size -> Html a -> ( number, number ) -> Html Msg
+nsXHtml : String
+nsXHtml =
+    "http://www.w3.org/1999/xhtml/"
+
+
+cellSvg : { width : Float, height : Float } -> Html a -> ( number, number ) -> Html Msg
 cellSvg size cell off =
     App.map (\_ -> NoOp)
         <| Svg.g [ offset off ]
-            [ Svg.rect (defaultRect size "stroke:green;line-style:dashed;fill:none") []
-            , Svg.foreignObject (defaultRect size "fill:red") [ Html.body [] [ cell ] ]
+            [ Svg.foreignObject
+                [ SA.x <| toString (-size.width / 2)
+                , SA.y <| toString (-size.height / 2)
+                , SA.width <| toString size.width
+                , SA.height <| toString size.height
+                  --, SA.requiredExtensions nsXHtml
+                ]
+                [ Html.div
+                    [ HA.attribute "xmlns" nsXHtml
+                    , HA.style
+                        [ (,) "width" "100%"
+                        , (,) "height" "100%"
+                        ]
+                    ]
+                    [ cell ]
+                ]
             ]
-
-
-defaultRect : Window.Size -> String -> List (Svg.Attribute a)
-defaultRect size style =
-    [ SA.x <| toString (-size.width // 2)
-    , SA.y <| toString (-size.height // 2)
-    , SA.width <| toString size.width
-    , SA.height <| toString size.height
-    , SA.style style
-    ]
 
 
 add : ( number, number ) -> ( number, number ) -> ( number, number )
 add ( a, b ) ( x, y ) =
     ( a + x, b + y )
-
-
-oppositeOf : ( Int, Int ) -> ( Int, Int )
-oppositeOf ( x, y ) =
-    ( -x, -y )

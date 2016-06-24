@@ -3,7 +3,7 @@ module KeyboardHelpers exposing (directionToTuple)
 import Keyboard.Extra as Keyboard exposing (Direction)
 
 
-directionToTuple : Keyboard.Direction -> ( Int, Int )
+directionToTuple : Keyboard.Direction -> ( Float, Float )
 directionToTuple dir =
     case dir of
         Keyboard.NoDirection ->
