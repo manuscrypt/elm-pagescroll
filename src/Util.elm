@@ -72,11 +72,4 @@ multiplyVec v1 v2 =
     vec2 (getX v1 * getX v2) (getY v1 * getY v2)
 
 
-viewBox : { a | height : Float, width : Float } -> String
-viewBox { width, height } =
-    String.join " " <| List.map toString [ -width / 2, -height / 2, width, height ]
-
-offset : ( number, number ) -> Svg.Attribute b
-offset ( x, y ) =
-    SA.transform <| "translate (" ++ (toString x) ++ "," ++ (toString y) ++ ")"
     
