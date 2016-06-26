@@ -6,6 +6,8 @@ import Html exposing (Html)
 import Html.Attributes as HA
 import Html.App as App
 import Svg.Attributes as SA
+import Html.Events as HE
+import Svg.Events as SE
 import Animation exposing (Animation)
 import AnimationFrame
 import Time exposing (Time)
@@ -37,7 +39,7 @@ type Msg
     | OnSizeChanged Window.Size
     | KeyboardMsg Keyboard.Msg
     | Scroll Dir
-    | Wheel ( Float, Float )
+    | Wheel Float
 
 
 main : Program Never
@@ -97,11 +99,12 @@ update msg model =
         NoOp ->
             model ! []
 
-        Wheel ( xx, yy ) ->
-            let
-                x =
-                    Debug.log "wheel" "s"
-            in
+        Wheel yOff ->
+            if yOff > 0 then 
+                update (Scroll (0,-1)) model
+            else if yOff < 0 then 
+                update (Scroll (0,1)) model
+            else 
                 model ! []
 
         KeyboardMsg keyMsg ->
@@ -193,22 +196,32 @@ view m =
         size =
             cellSize m
     in
-        Html.body [ HA.style [ (,) "overflow" "hidden", (,) "overflow-x" "hidden", (,) "overflow-y" "hidden", (,) "-ms-overflow-style" "none" ] ]
+        Html.body [ HA.style [ (,) "overflow" "hidden", (,) "overflow-x" "hidden", (,) "overflow-y" "hidden", (,) "-ms-overflow-style" "none" ]
+                  ]
             [ Svg.svg
                 [ SA.width <| toString width
                 , SA.height <| toString height
                 , SA.viewBox <| viewBox <| windowSize m
-                , on "wheel" wx
+                , HE.onWithOptions "wheel" defensiveOptions (Json.map Wheel decodeWheelEvent)            
                 ]
                 [ Svg.g [] <| List.indexedMap (viewCol m (List.length top)) allRows
                 --, Svg.circle [ SA.cx "0", SA.cy "0", SA.r "3", SA.fill "green" ] []
                 ]
             ]
 
+defensiveOptions : HE.Options
+defensiveOptions =
+    { stopPropagation = True
+    , preventDefault = True
+    }
 
-wx : Json.Decoder Msg
-wx =
-    Json.map Wheel <| Json.tuple2 (,) Json.float Json.float
+decodeWheelEvent : Json.Decoder Float
+decodeWheelEvent =
+  Json.oneOf
+    [ Json.at [ "deltaY" ] Json.float
+    , Json.at [ "wheelDelta" ] Json.float |> Json.map (\v -> -v)
+    ]
+    `Json.andThen` (\v -> if v /= 0 then Json.succeed v else Json.fail "Wheel of 0")
 
 
 viewCol : Model a -> Int -> Int -> Cols a -> Svg Msg
