@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html><head><meta charset="UTF-8"><title>Basic</title><style>html,head,body { padding:0; margin:0; }
+<html><head><meta charset="UTF-8"><title>PageScroll</title><style>html,head,body { padding:0; margin:0; }
 body { font-family: calibri, helvetica, arial, sans-serif; }</style><script type="text/javascript">
 (function() {
 'use strict';
@@ -6702,43 +6702,6 @@ var _elm_lang$html$Html$details = _elm_lang$html$Html$node('details');
 var _elm_lang$html$Html$summary = _elm_lang$html$Html$node('summary');
 var _elm_lang$html$Html$menuitem = _elm_lang$html$Html$node('menuitem');
 var _elm_lang$html$Html$menu = _elm_lang$html$Html$node('menu');
-var _elm_lang$html$Html_App$programWithFlags = _elm_lang$virtual_dom$VirtualDom$programWithFlags;
-var _elm_lang$html$Html_App$program = function (app) {
-	return _elm_lang$html$Html_App$programWithFlags(
-		_elm_lang$core$Native_Utils.update(
-			app,
-			{
-				init: function (_p0) {
-					return app.init;
-				}
-			}));
-};
-var _elm_lang$html$Html_App$beginnerProgram = function (_p1) {
-	var _p2 = _p1;
-	return _elm_lang$html$Html_App$programWithFlags(
-		{
-			init: function (_p3) {
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					_p2.model,
-					_elm_lang$core$Native_List.fromArray(
-						[]));
-			},
-			update: F2(
-				function (msg, model) {
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						A2(_p2.update, msg, model),
-						_elm_lang$core$Native_List.fromArray(
-							[]));
-				}),
-			view: _p2.view,
-			subscriptions: function (_p4) {
-				return _elm_lang$core$Platform_Sub$none;
-			}
-		});
-};
-var _elm_lang$html$Html_App$map = _elm_lang$virtual_dom$VirtualDom$map;
 var _elm_lang$html$Html_Attributes$attribute = _elm_lang$virtual_dom$VirtualDom$attribute;
 var _elm_lang$html$Html_Attributes$contextmenu = function (value) {
 	return A2(_elm_lang$html$Html_Attributes$attribute, 'contextmenu', value);
@@ -7090,6 +7053,143 @@ var _elm_lang$html$Html_Attributes$classList = function (list) {
 				A2(_elm_lang$core$List$filter, _elm_lang$core$Basics$snd, list))));
 };
 var _elm_lang$html$Html_Attributes$style = _elm_lang$virtual_dom$VirtualDom$style;
+var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode_ops[':='], 'keyCode', _elm_lang$core$Json_Decode$int);
+var _elm_lang$html$Html_Events$targetChecked = A2(
+	_elm_lang$core$Json_Decode$at,
+	_elm_lang$core$Native_List.fromArray(
+		['target', 'checked']),
+	_elm_lang$core$Json_Decode$bool);
+var _elm_lang$html$Html_Events$targetValue = A2(
+	_elm_lang$core$Json_Decode$at,
+	_elm_lang$core$Native_List.fromArray(
+		['target', 'value']),
+	_elm_lang$core$Json_Decode$string);
+var _elm_lang$html$Html_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
+var _elm_lang$html$Html_Events$onWithOptions = _elm_lang$virtual_dom$VirtualDom$onWithOptions;
+var _elm_lang$html$Html_Events$on = _elm_lang$virtual_dom$VirtualDom$on;
+var _elm_lang$html$Html_Events$onFocus = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'focus',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onBlur = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'blur',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onSubmitOptions = _elm_lang$core$Native_Utils.update(
+	_elm_lang$html$Html_Events$defaultOptions,
+	{preventDefault: true});
+var _elm_lang$html$Html_Events$onSubmit = function (msg) {
+	return A3(
+		_elm_lang$html$Html_Events$onWithOptions,
+		'submit',
+		_elm_lang$html$Html_Events$onSubmitOptions,
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onCheck = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'change',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetChecked));
+};
+var _elm_lang$html$Html_Events$onInput = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'input',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetValue));
+};
+var _elm_lang$html$Html_Events$onMouseOut = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseout',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseOver = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseover',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseLeave = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseleave',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseEnter = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseenter',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseUp = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseup',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseDown = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mousedown',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onDoubleClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'dblclick',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'click',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$Options = F2(
+	function (a, b) {
+		return {stopPropagation: a, preventDefault: b};
+	});
+var _elm_lang$html$Html_App$programWithFlags = _elm_lang$virtual_dom$VirtualDom$programWithFlags;
+var _elm_lang$html$Html_App$program = function (app) {
+	return _elm_lang$html$Html_App$programWithFlags(
+		_elm_lang$core$Native_Utils.update(
+			app,
+			{
+				init: function (_p0) {
+					return app.init;
+				}
+			}));
+};
+var _elm_lang$html$Html_App$beginnerProgram = function (_p1) {
+	var _p2 = _p1;
+	return _elm_lang$html$Html_App$programWithFlags(
+		{
+			init: function (_p3) {
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_p2.model,
+					_elm_lang$core$Native_List.fromArray(
+						[]));
+			},
+			update: F2(
+				function (msg, model) {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						A2(_p2.update, msg, model),
+						_elm_lang$core$Native_List.fromArray(
+							[]));
+				}),
+			view: _p2.view,
+			subscriptions: function (_p4) {
+				return _elm_lang$core$Platform_Sub$none;
+			}
+		});
+};
+var _elm_lang$html$Html_App$map = _elm_lang$virtual_dom$VirtualDom$map;
 var _elm_lang$svg$Svg$text = _elm_lang$virtual_dom$VirtualDom$text;
 var _elm_lang$svg$Svg$svgNamespace = A2(
 	_elm_lang$virtual_dom$VirtualDom$property,
@@ -7436,106 +7536,6 @@ var _elm_lang$svg$Svg_Attributes$additive = _elm_lang$virtual_dom$VirtualDom$att
 var _elm_lang$svg$Svg_Attributes$accumulate = _elm_lang$virtual_dom$VirtualDom$attribute('accumulate');
 var _elm_lang$svg$Svg_Attributes$accelerate = _elm_lang$virtual_dom$VirtualDom$attribute('accelerate');
 var _elm_lang$svg$Svg_Attributes$accentHeight = _elm_lang$virtual_dom$VirtualDom$attribute('accent-height');
-var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode_ops[':='], 'keyCode', _elm_lang$core$Json_Decode$int);
-var _elm_lang$html$Html_Events$targetChecked = A2(
-	_elm_lang$core$Json_Decode$at,
-	_elm_lang$core$Native_List.fromArray(
-		['target', 'checked']),
-	_elm_lang$core$Json_Decode$bool);
-var _elm_lang$html$Html_Events$targetValue = A2(
-	_elm_lang$core$Json_Decode$at,
-	_elm_lang$core$Native_List.fromArray(
-		['target', 'value']),
-	_elm_lang$core$Json_Decode$string);
-var _elm_lang$html$Html_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
-var _elm_lang$html$Html_Events$onWithOptions = _elm_lang$virtual_dom$VirtualDom$onWithOptions;
-var _elm_lang$html$Html_Events$on = _elm_lang$virtual_dom$VirtualDom$on;
-var _elm_lang$html$Html_Events$onFocus = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'focus',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onBlur = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'blur',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onSubmitOptions = _elm_lang$core$Native_Utils.update(
-	_elm_lang$html$Html_Events$defaultOptions,
-	{preventDefault: true});
-var _elm_lang$html$Html_Events$onSubmit = function (msg) {
-	return A3(
-		_elm_lang$html$Html_Events$onWithOptions,
-		'submit',
-		_elm_lang$html$Html_Events$onSubmitOptions,
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onCheck = function (tagger) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'change',
-		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetChecked));
-};
-var _elm_lang$html$Html_Events$onInput = function (tagger) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'input',
-		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetValue));
-};
-var _elm_lang$html$Html_Events$onMouseOut = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseout',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseOver = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseover',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseLeave = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseleave',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseEnter = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseenter',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseUp = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseup',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseDown = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mousedown',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onDoubleClick = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'dblclick',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onClick = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'click',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$Options = F2(
-	function (a, b) {
-		return {stopPropagation: a, preventDefault: b};
-	});
 //import Native.Scheduler //
 
 var _elm_lang$core$Native_Time = function() {
@@ -9518,7 +9518,71 @@ var _ManuScriptHub$elm_pagescroll$PageScroll$xx = function (dir) {
 	var _p6 = dir;
 	return 1;
 };
+var _ManuScriptHub$elm_pagescroll$PageScroll$cellSvg = F3(
+	function (size, cell, off) {
+		var sy = _elm_lang$core$Basics$toString((0 - size.height) / 2);
+		var sx = _elm_lang$core$Basics$toString((0 - size.width) / 2);
+		return A2(
+			_elm_lang$svg$Svg$foreignObject,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$svg$Svg_Attributes$x(sx),
+					_elm_lang$svg$Svg_Attributes$y(sy),
+					_elm_lang$svg$Svg_Attributes$width(
+					_elm_lang$core$Basics$toString(size.width)),
+					_elm_lang$svg$Svg_Attributes$height(
+					_elm_lang$core$Basics$toString(size.height)),
+					_ManuScriptHub$elm_pagescroll$PageScroll$offset(off)
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[cell]));
+	});
 var _ManuScriptHub$elm_pagescroll$PageScroll$nsXHtml = 'http://www.w3.org/1999/xhtml/';
+var _ManuScriptHub$elm_pagescroll$PageScroll$viewCell = F4(
+	function (model, colCount, idx, cell) {
+		var off = {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Basics$toFloat((0 - colCount) + idx) * model.windowSize.width,
+			_1: 0
+		};
+		var animOff = A3(_szabba$elm_animations$Animation$sample, model.animation, model.windowSize, model.curDir);
+		return A3(
+			_ManuScriptHub$elm_pagescroll$PageScroll$cellSvg,
+			model.windowSize,
+			cell,
+			A2(_ManuScriptHub$elm_pagescroll$PageScroll$add, animOff, off));
+	});
+var _ManuScriptHub$elm_pagescroll$PageScroll$viewCol = F4(
+	function (model, rowCount, idx, _p7) {
+		var _p8 = _p7;
+		var _p9 = _p8._0;
+		var off = {
+			ctor: '_Tuple2',
+			_0: 0,
+			_1: _elm_lang$core$Basics$toFloat((0 - rowCount) + idx) * model.windowSize.height
+		};
+		var cols = A2(
+			_elm_lang$core$List$indexedMap,
+			A2(
+				_ManuScriptHub$elm_pagescroll$PageScroll$viewCell,
+				model,
+				_elm_lang$core$List$length(_p9)),
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$List$reverse(_p9),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Native_List.fromArray(
+						[_p8._1]),
+					_p8._2)));
+		return A2(
+			_elm_lang$svg$Svg$g,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_ManuScriptHub$elm_pagescroll$PageScroll$offset(off)
+				]),
+			cols);
+	});
 var _ManuScriptHub$elm_pagescroll$PageScroll$zeroState = F2(
 	function (s, d) {
 		return {ctor: '_Tuple2', _0: 0, _1: 0};
@@ -9526,9 +9590,9 @@ var _ManuScriptHub$elm_pagescroll$PageScroll$zeroState = F2(
 var _ManuScriptHub$elm_pagescroll$PageScroll$scrollAnimation = A2(
 	_szabba$elm_animations$Animation$map,
 	F3(
-		function (t, size, _p7) {
-			var _p8 = _p7;
-			return {ctor: '_Tuple2', _0: ((0 - t) * _p8.x) * size.width, _1: (t * _p8.y) * size.height};
+		function (t, size, _p10) {
+			var _p11 = _p10;
+			return {ctor: '_Tuple2', _0: ((0 - t) * _p11.x) * size.width, _1: (t * _p11.y) * size.height};
 		}),
 	A2(
 		_szabba$elm_animations$Animation$map,
@@ -9555,189 +9619,93 @@ var _ManuScriptHub$elm_pagescroll$PageScroll$Cols = F3(
 	function (a, b, c) {
 		return {ctor: 'Cols', _0: a, _1: b, _2: c};
 	});
-var _ManuScriptHub$elm_pagescroll$PageScroll$shiftLeft = function (_p9) {
-	var _p10 = _p9;
-	var _p14 = _p10._2;
-	var _p13 = _p10._0;
-	var _p12 = _p10._1;
-	var _p11 = _p13;
-	if (_p11.ctor === '[]') {
-		return A3(_ManuScriptHub$elm_pagescroll$PageScroll$Cols, _p13, _p12, _p14);
+var _ManuScriptHub$elm_pagescroll$PageScroll$shiftLeft = function (_p12) {
+	var _p13 = _p12;
+	var _p17 = _p13._2;
+	var _p16 = _p13._0;
+	var _p15 = _p13._1;
+	var _p14 = _p16;
+	if (_p14.ctor === '[]') {
+		return A3(_ManuScriptHub$elm_pagescroll$PageScroll$Cols, _p16, _p15, _p17);
 	} else {
 		return A3(
 			_ManuScriptHub$elm_pagescroll$PageScroll$Cols,
-			_p11._1,
-			_p11._0,
-			A2(_elm_lang$core$List_ops['::'], _p12, _p14));
+			_p14._1,
+			_p14._0,
+			A2(_elm_lang$core$List_ops['::'], _p15, _p17));
 	}
 };
-var _ManuScriptHub$elm_pagescroll$PageScroll$shiftRight = function (_p15) {
-	var _p16 = _p15;
-	var _p20 = _p16._2;
-	var _p19 = _p16._0;
-	var _p18 = _p16._1;
-	var _p17 = _p20;
-	if (_p17.ctor === '[]') {
-		return A3(_ManuScriptHub$elm_pagescroll$PageScroll$Cols, _p19, _p18, _p20);
+var _ManuScriptHub$elm_pagescroll$PageScroll$shiftRight = function (_p18) {
+	var _p19 = _p18;
+	var _p23 = _p19._2;
+	var _p22 = _p19._0;
+	var _p21 = _p19._1;
+	var _p20 = _p23;
+	if (_p20.ctor === '[]') {
+		return A3(_ManuScriptHub$elm_pagescroll$PageScroll$Cols, _p22, _p21, _p23);
 	} else {
 		return A3(
 			_ManuScriptHub$elm_pagescroll$PageScroll$Cols,
-			A2(_elm_lang$core$List_ops['::'], _p18, _p19),
-			_p17._0,
-			_p17._1);
+			A2(_elm_lang$core$List_ops['::'], _p21, _p22),
+			_p20._0,
+			_p20._1);
 	}
 };
 var _ManuScriptHub$elm_pagescroll$PageScroll$Rows = F3(
 	function (a, b, c) {
 		return {ctor: 'Rows', _0: a, _1: b, _2: c};
 	});
-var _ManuScriptHub$elm_pagescroll$PageScroll$shiftUp = function (_p21) {
-	var _p22 = _p21;
-	var _p26 = _p22._0;
-	var _p25 = _p22._1;
-	var _p24 = _p22._2;
-	var _p23 = _p26;
-	if (_p23.ctor === '[]') {
-		return A3(_ManuScriptHub$elm_pagescroll$PageScroll$Rows, _p26, _p25, _p24);
+var _ManuScriptHub$elm_pagescroll$PageScroll$shiftUp = function (_p24) {
+	var _p25 = _p24;
+	var _p29 = _p25._0;
+	var _p28 = _p25._1;
+	var _p27 = _p25._2;
+	var _p26 = _p29;
+	if (_p26.ctor === '[]') {
+		return A3(_ManuScriptHub$elm_pagescroll$PageScroll$Rows, _p29, _p28, _p27);
 	} else {
 		return A3(
 			_ManuScriptHub$elm_pagescroll$PageScroll$Rows,
-			_p23._1,
-			_p23._0,
-			A2(_elm_lang$core$List_ops['::'], _p25, _p24));
+			_p26._1,
+			_p26._0,
+			A2(_elm_lang$core$List_ops['::'], _p28, _p27));
 	}
 };
-var _ManuScriptHub$elm_pagescroll$PageScroll$shiftDown = function (_p27) {
-	var _p28 = _p27;
-	var _p32 = _p28._0;
-	var _p31 = _p28._1;
-	var _p30 = _p28._2;
-	var _p29 = _p30;
-	if (_p29.ctor === '[]') {
-		return A3(_ManuScriptHub$elm_pagescroll$PageScroll$Rows, _p32, _p31, _p30);
+var _ManuScriptHub$elm_pagescroll$PageScroll$shiftDown = function (_p30) {
+	var _p31 = _p30;
+	var _p35 = _p31._0;
+	var _p34 = _p31._1;
+	var _p33 = _p31._2;
+	var _p32 = _p33;
+	if (_p32.ctor === '[]') {
+		return A3(_ManuScriptHub$elm_pagescroll$PageScroll$Rows, _p35, _p34, _p33);
 	} else {
 		return A3(
 			_ManuScriptHub$elm_pagescroll$PageScroll$Rows,
-			A2(_elm_lang$core$List_ops['::'], _p31, _p32),
-			_p29._0,
-			_p29._1);
+			A2(_elm_lang$core$List_ops['::'], _p34, _p35),
+			_p32._0,
+			_p32._1);
 	}
 };
 var _ManuScriptHub$elm_pagescroll$PageScroll$shift = F2(
-	function (_p33, dir) {
-		var _p34 = _p33;
-		var _p37 = _p34._0;
-		var _p36 = _p34._1;
-		var _p35 = _p34._2;
+	function (_p36, dir) {
+		var _p37 = _p36;
+		var _p40 = _p37._0;
+		var _p39 = _p37._1;
+		var _p38 = _p37._2;
 		return _elm_lang$core$Native_Utils.eq(dir, _ManuScriptHub$elm_pagescroll$PageScroll$left) ? A3(
 			_ManuScriptHub$elm_pagescroll$PageScroll$Rows,
-			_p37,
-			_ManuScriptHub$elm_pagescroll$PageScroll$shiftLeft(_p36),
-			_p35) : (_elm_lang$core$Native_Utils.eq(dir, _ManuScriptHub$elm_pagescroll$PageScroll$right) ? A3(
+			_p40,
+			_ManuScriptHub$elm_pagescroll$PageScroll$shiftLeft(_p39),
+			_p38) : (_elm_lang$core$Native_Utils.eq(dir, _ManuScriptHub$elm_pagescroll$PageScroll$right) ? A3(
 			_ManuScriptHub$elm_pagescroll$PageScroll$Rows,
-			_p37,
-			_ManuScriptHub$elm_pagescroll$PageScroll$shiftRight(_p36),
-			_p35) : (_elm_lang$core$Native_Utils.eq(dir, _ManuScriptHub$elm_pagescroll$PageScroll$up) ? _ManuScriptHub$elm_pagescroll$PageScroll$shiftUp(
-			A3(_ManuScriptHub$elm_pagescroll$PageScroll$Rows, _p37, _p36, _p35)) : (_elm_lang$core$Native_Utils.eq(dir, _ManuScriptHub$elm_pagescroll$PageScroll$down) ? _ManuScriptHub$elm_pagescroll$PageScroll$shiftDown(
-			A3(_ManuScriptHub$elm_pagescroll$PageScroll$Rows, _p37, _p36, _p35)) : A3(_ManuScriptHub$elm_pagescroll$PageScroll$Rows, _p37, _p36, _p35))));
+			_p40,
+			_ManuScriptHub$elm_pagescroll$PageScroll$shiftRight(_p39),
+			_p38) : (_elm_lang$core$Native_Utils.eq(dir, _ManuScriptHub$elm_pagescroll$PageScroll$up) ? _ManuScriptHub$elm_pagescroll$PageScroll$shiftUp(
+			A3(_ManuScriptHub$elm_pagescroll$PageScroll$Rows, _p40, _p39, _p38)) : (_elm_lang$core$Native_Utils.eq(dir, _ManuScriptHub$elm_pagescroll$PageScroll$down) ? _ManuScriptHub$elm_pagescroll$PageScroll$shiftDown(
+			A3(_ManuScriptHub$elm_pagescroll$PageScroll$Rows, _p40, _p39, _p38)) : A3(_ManuScriptHub$elm_pagescroll$PageScroll$Rows, _p40, _p39, _p38))));
 	});
-var _ManuScriptHub$elm_pagescroll$PageScroll$PageMsg = function (a) {
-	return {ctor: 'PageMsg', _0: a};
-};
-var _ManuScriptHub$elm_pagescroll$PageScroll$cellSvg = F3(
-	function (size, cell, off) {
-		return A2(
-			_elm_lang$html$Html_App$map,
-			_ManuScriptHub$elm_pagescroll$PageScroll$PageMsg,
-			A2(
-				_elm_lang$svg$Svg$foreignObject,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$svg$Svg_Attributes$x(
-						_elm_lang$core$Basics$toString((0 - size.width) / 2)),
-						_elm_lang$svg$Svg_Attributes$y(
-						_elm_lang$core$Basics$toString((0 - size.height) / 2)),
-						_elm_lang$svg$Svg_Attributes$width(
-						_elm_lang$core$Basics$toString(size.width)),
-						_elm_lang$svg$Svg_Attributes$height(
-						_elm_lang$core$Basics$toString(size.height)),
-						_ManuScriptHub$elm_pagescroll$PageScroll$offset(off)
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						A2(
-						_elm_lang$html$Html$body,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								A2(_elm_lang$html$Html_Attributes$attribute, 'xmlns', _ManuScriptHub$elm_pagescroll$PageScroll$nsXHtml),
-								_elm_lang$html$Html_Attributes$style(
-								_elm_lang$core$Native_List.fromArray(
-									[
-										A2(
-										F2(
-											function (v0, v1) {
-												return {ctor: '_Tuple2', _0: v0, _1: v1};
-											}),
-										'width',
-										'100%'),
-										A2(
-										F2(
-											function (v0, v1) {
-												return {ctor: '_Tuple2', _0: v0, _1: v1};
-											}),
-										'height',
-										'100%')
-									]))
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[cell]))
-					])));
-	});
-var _ManuScriptHub$elm_pagescroll$PageScroll$viewCell = F4(
-	function (model, colCount, idx, cell) {
-		var off = {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Basics$toFloat((0 - colCount) + idx) * model.windowSize.width,
-			_1: 0
-		};
-		var animOff = A3(_szabba$elm_animations$Animation$sample, model.animation, model.windowSize, model.curDir);
-		return A3(
-			_ManuScriptHub$elm_pagescroll$PageScroll$cellSvg,
-			model.windowSize,
-			cell,
-			A2(_ManuScriptHub$elm_pagescroll$PageScroll$add, animOff, off));
-	});
-var _ManuScriptHub$elm_pagescroll$PageScroll$viewCol = F4(
-	function (model, rowCount, idx, _p38) {
-		var _p39 = _p38;
-		var _p40 = _p39._0;
-		var off = {
-			ctor: '_Tuple2',
-			_0: 0,
-			_1: _elm_lang$core$Basics$toFloat((0 - rowCount) + idx) * model.windowSize.height
-		};
-		var cols = A2(
-			_elm_lang$core$List$indexedMap,
-			A2(
-				_ManuScriptHub$elm_pagescroll$PageScroll$viewCell,
-				model,
-				_elm_lang$core$List$length(_p40)),
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_elm_lang$core$List$reverse(_p40),
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_elm_lang$core$Native_List.fromArray(
-						[_p39._1]),
-					_p39._2)));
-		return A2(
-			_elm_lang$svg$Svg$g,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_ManuScriptHub$elm_pagescroll$PageScroll$offset(off)
-				]),
-			cols);
-	});
+var _ManuScriptHub$elm_pagescroll$PageScroll$PageMsg = {ctor: 'PageMsg'};
 var _ManuScriptHub$elm_pagescroll$PageScroll$Wheel = function (a) {
 	return {ctor: 'Wheel', _0: a};
 };
@@ -9828,18 +9796,7 @@ var _ManuScriptHub$elm_pagescroll$PageScroll$view = function (m) {
 						_ManuScriptHub$elm_pagescroll$PageScroll$viewCol,
 						m,
 						_elm_lang$core$List$length(top)),
-					allRows)),
-				A2(
-				_elm_lang$svg$Svg$circle,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$svg$Svg_Attributes$cx('0'),
-						_elm_lang$svg$Svg_Attributes$cy('0'),
-						_elm_lang$svg$Svg_Attributes$r('3'),
-						_elm_lang$svg$Svg_Attributes$fill('green')
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[]))
+					allRows))
 			]));
 };
 var _ManuScriptHub$elm_pagescroll$PageScroll$Scroll = function (a) {
@@ -10001,182 +9958,19 @@ var _ManuScriptHub$elm_pagescroll$PageScroll$init = function (content) {
 var _ManuScriptHub$elm_pagescroll$PageScroll$Animate = function (a) {
 	return {ctor: 'Animate', _0: a};
 };
-var _ManuScriptHub$elm_pagescroll$PageScroll$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$batch(
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A2(_elm_lang$core$Platform_Sub$map, _ManuScriptHub$elm_pagescroll$PageScroll$KeyboardMsg, _ohanhi$keyboard_extra$Keyboard_Extra$subscriptions),
-				_elm_lang$window$Window$resizes(
-				function (size) {
-					return _ManuScriptHub$elm_pagescroll$PageScroll$OnSizeChanged(size);
-				}),
-				_szabba$elm_animations$Animation$isDone(model.animation) ? _elm_lang$core$Platform_Sub$none : _elm_lang$animation_frame$AnimationFrame$diffs(_ManuScriptHub$elm_pagescroll$PageScroll$Animate)
-			]));
-};
-var _ManuScriptHub$elm_pagescroll$Basic$samplePage = F3(
-	function (idx, txt, hex) {
-		return A2(
-			_elm_lang$html$Html$div,
-			_elm_lang$core$Native_List.fromArray(
-				[
-					_elm_lang$html$Html_Attributes$style(
-					_elm_lang$core$Native_List.fromArray(
-						[
-							A2(
-							F2(
-								function (v0, v1) {
-									return {ctor: '_Tuple2', _0: v0, _1: v1};
-								}),
-							'background-color',
-							hex),
-							A2(
-							F2(
-								function (v0, v1) {
-									return {ctor: '_Tuple2', _0: v0, _1: v1};
-								}),
-							'font-family',
-							'monospace'),
-							A2(
-							F2(
-								function (v0, v1) {
-									return {ctor: '_Tuple2', _0: v0, _1: v1};
-								}),
-							'font-size',
-							'64px'),
-							A2(
-							F2(
-								function (v0, v1) {
-									return {ctor: '_Tuple2', _0: v0, _1: v1};
-								}),
-							'font-weight',
-							'bold'),
-							A2(
-							F2(
-								function (v0, v1) {
-									return {ctor: '_Tuple2', _0: v0, _1: v1};
-								}),
-							'width',
-							'100%'),
-							A2(
-							F2(
-								function (v0, v1) {
-									return {ctor: '_Tuple2', _0: v0, _1: v1};
-								}),
-							'height',
-							'100%'),
-							A2(
-							F2(
-								function (v0, v1) {
-									return {ctor: '_Tuple2', _0: v0, _1: v1};
-								}),
-							'display',
-							'table')
-						]))
-				]),
-			_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
-					_elm_lang$html$Html$div,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html_Attributes$style(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									A2(
-									F2(
-										function (v0, v1) {
-											return {ctor: '_Tuple2', _0: v0, _1: v1};
-										}),
-									'vertical-align',
-									'middle'),
-									A2(
-									F2(
-										function (v0, v1) {
-											return {ctor: '_Tuple2', _0: v0, _1: v1};
-										}),
-									'display',
-									'table-cell'),
-									A2(
-									F2(
-										function (v0, v1) {
-											return {ctor: '_Tuple2', _0: v0, _1: v1};
-										}),
-									'text-align',
-									'center')
-								]))
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$html$Html$text(txt)
-						])),
-					A2(
-					_elm_lang$svg$Svg$svg,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$svg$Svg_Attributes$width('100%'),
-							_elm_lang$svg$Svg_Attributes$height('100%')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							A2(
-							_elm_lang$svg$Svg$circle,
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$svg$Svg_Attributes$cx('0'),
-									_elm_lang$svg$Svg_Attributes$cy('0'),
-									_elm_lang$svg$Svg_Attributes$r('5'),
-									_elm_lang$svg$Svg_Attributes$style('fill:red; stroke: black')
-								]),
-							_elm_lang$core$Native_List.fromArray(
-								[]))
-						]))
-				]));
-	});
-var _ManuScriptHub$elm_pagescroll$Basic$pages = A3(
-	_ManuScriptHub$elm_pagescroll$PageScroll$Rows,
+var _ManuScriptHub$elm_pagescroll$PageScroll$subscriptions = _elm_lang$core$Platform_Sub$batch(
 	_elm_lang$core$Native_List.fromArray(
 		[
-			A3(
-			_ManuScriptHub$elm_pagescroll$PageScroll$Cols,
-			_elm_lang$core$Native_List.fromArray(
-				[]),
-			A3(_ManuScriptHub$elm_pagescroll$Basic$samplePage, 1, '1', '#875692'),
-			_elm_lang$core$Native_List.fromArray(
-				[]))
-		]),
-	A3(
-		_ManuScriptHub$elm_pagescroll$PageScroll$Cols,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A3(_ManuScriptHub$elm_pagescroll$Basic$samplePage, 2, '2.1', '#F38400')
-			]),
-		A3(_ManuScriptHub$elm_pagescroll$Basic$samplePage, 3, '2.2', '#A1CAF1'),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				A3(_ManuScriptHub$elm_pagescroll$Basic$samplePage, 4, '2.3', '#BE0032')
-			])),
-	_elm_lang$core$Native_List.fromArray(
-		[
-			A3(
-			_ManuScriptHub$elm_pagescroll$PageScroll$Cols,
-			_elm_lang$core$Native_List.fromArray(
-				[]),
-			A3(_ManuScriptHub$elm_pagescroll$Basic$samplePage, 5, '3', '#C2B280'),
-			_elm_lang$core$Native_List.fromArray(
-				[]))
+			A2(_elm_lang$core$Platform_Sub$map, _ManuScriptHub$elm_pagescroll$PageScroll$KeyboardMsg, _ohanhi$keyboard_extra$Keyboard_Extra$subscriptions),
+			_elm_lang$window$Window$resizes(
+			function (size) {
+				return _ManuScriptHub$elm_pagescroll$PageScroll$OnSizeChanged(size);
+			}),
+			_elm_lang$animation_frame$AnimationFrame$diffs(_ManuScriptHub$elm_pagescroll$PageScroll$Animate)
 		]));
-var _ManuScriptHub$elm_pagescroll$Basic$main = {
-	main: _elm_lang$html$Html_App$program(
-		{
-			init: _ManuScriptHub$elm_pagescroll$PageScroll$init(_ManuScriptHub$elm_pagescroll$Basic$pages),
-			subscriptions: _ManuScriptHub$elm_pagescroll$PageScroll$subscriptions,
-			update: _ManuScriptHub$elm_pagescroll$PageScroll$update,
-			view: _ManuScriptHub$elm_pagescroll$PageScroll$view
-		})
-};
 var Elm = {};
-Elm['Basic'] = Elm['Basic'] || {};
-_elm_lang$core$Native_Platform.addPublicModule(Elm['Basic'], 'Basic', typeof _ManuScriptHub$elm_pagescroll$Basic$main === 'undefined' ? null : _ManuScriptHub$elm_pagescroll$Basic$main);
+Elm['PageScroll'] = Elm['PageScroll'] || {};
+_elm_lang$core$Native_Platform.addPublicModule(Elm['PageScroll'], 'PageScroll', typeof _ManuScriptHub$elm_pagescroll$PageScroll$main === 'undefined' ? null : _ManuScriptHub$elm_pagescroll$PageScroll$main);
 
 if (typeof define === "function" && define['amd'])
 {
@@ -10207,4 +10001,4 @@ for (var publicModule in Elm)
 }
 
 }).call(this);
-</script></head><body><script type="text/javascript">Elm.Basic.fullscreen()</script></body></html>
+</script></head><body><script type="text/javascript">Elm.PageScroll.fullscreen()</script></body></html>

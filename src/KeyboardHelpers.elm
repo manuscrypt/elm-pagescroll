@@ -1,3 +1,0 @@
-module KeyboardHelpers exposing (directionToTuple)
-
-

@@ -8,7 +8,6 @@ import Html.App as App
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import String
-import Dict exposing (Dict)
 import Time exposing (Time)
 import Json.Decode as Json exposing ((:=))
 import Window
@@ -31,34 +30,33 @@ type alias Offset =
     ( Float, Float )
 
 
-type alias Cell a =
-    VirtualDom.Node a
+type alias Cell = VirtualDom.Node Msg
 
 
-type Cols a
-    = Cols (List (Cell a)) (Cell a) (List (Cell a))
+type Cols
+    = Cols (List Cell) Cell (List Cell)
 
 
-type Rows a
-    = Rows (List (Cols a)) (Cols a) (List (Cols a))
+type Rows
+    = Rows (List Cols) Cols (List Cols)
 
 
-type alias Model a =
+type alias Model =
     { animation : Animation (FloatWindowSize -> Dir -> ( Float, Float ))
-    , rows : Rows a
+    , rows : Rows
     , windowSize : FloatWindowSize
     , keyboardModel : Keyboard.Model
     , curDir : Dir
     }
 
 
-type Msg a
+type Msg
     = Animate Time
     | OnSizeChanged Window.Size
     | KeyboardMsg Keyboard.Msg
     | Scroll Dir
     | Wheel Float
-    | PageMsg a
+    | PageMsg
 
 
 noDir : Dir
@@ -86,19 +84,16 @@ down =
     { x = 0, y = -1 }
 
 
-subscriptions : Model a -> Sub (Msg a)
-subscriptions model =
+subscriptions : Sub Msg
+subscriptions =
     Sub.batch
         [ Sub.map KeyboardMsg Keyboard.subscriptions
         , Window.resizes (\size -> OnSizeChanged size)
-        , if Animation.isDone model.animation then
-            Sub.none
-          else
-            AnimationFrame.diffs Animate
+        , AnimationFrame.diffs Animate
         ]
 
 
-init : Rows a -> ( Model a, Cmd (Msg a) )
+init : Rows -> ( Model, Cmd Msg )
 init content =
     let
         ( keyboardModel, keyboardCmd ) =
@@ -126,7 +121,7 @@ scrollAnimation =
             )
 
 
-update : Msg a -> Model a -> ( Model a, Cmd (Msg a) )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Wheel yOff ->
@@ -182,7 +177,7 @@ update msg model =
                         }
                             ! []
 
-        PageMsg _ ->
+        PageMsg ->
             model ! []
 
 
@@ -191,7 +186,7 @@ zeroState s d =
     ( 0, 0 )
 
 
-view : Model a -> Svg (Msg a)
+view : Model -> Svg Msg
 view m =
     let
         { width, height } =
@@ -216,7 +211,7 @@ view m =
             ]
 
 
-viewCol : Model a -> Int -> Int -> Cols a -> Svg (Msg a)
+viewCol : Model -> Int -> Int -> Cols -> Svg Msg
 viewCol model rowCount idx (Cols left center right) =
     let
         off =
@@ -229,7 +224,7 @@ viewCol model rowCount idx (Cols left center right) =
             Svg.g [ offset off ] cols
 
 
-viewCell : Model a -> Int -> Int -> Cell a -> Svg (Msg a)
+viewCell : Model -> Int -> Int -> Cell -> Svg Msg
 viewCell model colCount idx cell =
     let
         animOff =
@@ -246,26 +241,18 @@ nsXHtml =
     "http://www.w3.org/1999/xhtml/"
 
 
-cellSvg : FloatWindowSize -> Html a -> Offset -> Html (Msg a)
+cellSvg : FloatWindowSize -> Cell -> Offset -> Html Msg
 cellSvg size cell off =
-    App.map PageMsg
-        <| Svg.foreignObject
-                [ SA.x <| toString (-size.width / 2)
-                , SA.y <| toString (-size.height / 2)
+    let sx = toString (-size.width / 2)
+        sy = toString (-size.height / 2)
+    in Svg.foreignObject
+                [ SA.x sx 
+                , SA.y sy 
                 , SA.width <| toString size.width
                 , SA.height <| toString size.height
                 , offset off 
                 --, SA.requiredExtensions nsXHtml
-                ]
-                [ Html.body
-                    [ HA.attribute "xmlns" nsXHtml
-                    , HA.style
-                        [ (,) "width" "100%"
-                        , (,) "height" "100%"
-                        ]
-                    ]
-                    [ cell ]
-                ]
+                ] [cell]
             
 
 xx: {x: Float, y: Float} -> Int
@@ -282,7 +269,7 @@ offset : Offset -> Svg.Attribute b
 offset ( x, y ) =
     SA.transform <| "translate (" ++ (toString x) ++ "," ++ (toString y) ++ ")"
 
-shift : Rows a -> Dir -> Rows a
+shift : Rows -> Dir -> Rows
 shift (Rows top mid bot) dir =
     if dir == left then
         Rows top (shiftLeft mid) bot
@@ -296,7 +283,7 @@ shift (Rows top mid bot) dir =
         Rows top mid bot
 
 
-shiftUp : Rows a -> Rows a
+shiftUp : Rows -> Rows
 shiftUp (Rows top mid bot) =
     case top of
         [] ->
@@ -306,7 +293,7 @@ shiftUp (Rows top mid bot) =
             Rows newTop newMid (mid :: bot)
 
 
-shiftDown : Rows a -> Rows a
+shiftDown : Rows -> Rows
 shiftDown (Rows top mid bot) =
     case bot of
         [] ->
@@ -316,7 +303,7 @@ shiftDown (Rows top mid bot) =
             Rows (mid :: top) newMid newBot
 
 
-shiftLeft : Cols a -> Cols a
+shiftLeft : Cols -> Cols
 shiftLeft (Cols left center right) =
     case left of
         [] ->
@@ -326,7 +313,7 @@ shiftLeft (Cols left center right) =
             Cols newLeft newCenter (center :: right)
 
 
-shiftRight : Cols a -> Cols a
+shiftRight : Cols -> Cols
 shiftRight (Cols left center right) =
     case right of
         [] ->
